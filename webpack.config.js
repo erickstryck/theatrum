@@ -6,7 +6,7 @@ var config = {
   entry: __dirname + '/src/index.js',
   output: {
     path: __dirname + '/dist',
-    filename: libraryName+'.min.js',
+    filename: libraryName + '.min.js',
     library: libraryName,
     libraryTarget: 'umd',
     umdNamedDefine: true
@@ -22,26 +22,26 @@ var config = {
   },
   externals: {
     'react': {
-        root: 'React',
-        commonjs2: 'react',
-        commonjs: 'react',
-        amd: 'react'
+      root: 'React',
+      commonjs2: 'react',
+      commonjs: 'react',
+      amd: 'react'
     },
-    'react-dom':{
-        root:'ReactDOM',
-        commonjs2: 'react-dom',
-        commonjs: 'react-dom',
-        amd:'react-dom'
+    'react-dom': {
+      root: 'ReactDOM',
+      commonjs2: 'react-dom',
+      commonjs: 'react-dom',
+      amd: 'react-dom'
     }
   },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin({comments: false})
+    new webpack.optimize.UglifyJsPlugin({ comments: true, compress: true })
   ],
   resolve: {
     root: path.resolve('./src'),
     extensions: ['', '.js']
   },
-  devtool:"source-map"
+  devtool: "source-map"
 };
 
 module.exports = config;

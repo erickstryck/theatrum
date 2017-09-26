@@ -1,5 +1,5 @@
-var ninf={
-  minify:false
+var ninf = {
+  minify: true
 };
 
 module.exports = ninf;
