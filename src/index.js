@@ -1,2 +1,1 @@
-import DeathStar from './DeathStar';
-export default DeathStar;
+export { DeathStar } from './DeathStar';
