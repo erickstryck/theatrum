@@ -40,7 +40,7 @@ var config = {
   resolve: {
     root: path.resolve('./src'),
     extensions: ['', '.js']
-  }
+  },
   devtool:"source-map"
 };
 
