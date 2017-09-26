@@ -1,6 +1,6 @@
 {
   "name": "react-deathstar",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Create, Manipulate and Destroy React Elements easily",
   "main": "./lib/index",
   "scripts": {

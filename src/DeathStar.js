@@ -117,7 +117,7 @@ export default class DeathStar {
   /**
    * Destrói os elementos React do repositório por meio da lista de Arrays informados.
    * 
-   * @param {array} keys 
+   * @param {array | string} keys 
    */
   destroy(keys) {
     if (keys instanceof Array) {
