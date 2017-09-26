@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint src",
     "prebuild": "rimraf lib && babel src -d lib",
-    "build": "NODE_ENV=production webpack --config webpack.config.js"
+    "build": "webpack --config webpack.config.js"
   },
   "keywords": [
     "react",

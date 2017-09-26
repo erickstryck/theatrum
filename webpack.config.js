@@ -35,7 +35,7 @@ var config = {
     }
   },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin({ comments: true, compress: true })
+    new webpack.optimize.UglifyJsPlugin({ comments: false })
   ],
   resolve: {
     root: path.resolve('./src'),
