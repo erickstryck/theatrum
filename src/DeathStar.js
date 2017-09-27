@@ -63,11 +63,12 @@ export default class DeathStar {
   }
 
   /**
-   * Persiste os dados informados no repositório local
+   * Persiste os dados informados no repositório local. 
+   * Você poderá persistir o contexto do componente e recuperar o mesmo posteriormente.
    * 
    * @param {string} key 
    * @param {object} value 
-   * @param {object} context
+   * @param {boolean} context
    * @return {object | undefined}
    */
   putStore(key, value, context) {
