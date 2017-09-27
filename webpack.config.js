@@ -15,7 +15,7 @@ var config = {
     loaders: [
       {
         test: /(\.jsx|\.js)$/,
-        loader: 'babel',
+        loader: 'babel-loader',
         exclude: /node_modules/
       }
     ]
@@ -38,8 +38,8 @@ var config = {
     new webpack.optimize.UglifyJsPlugin({ comments: false })
   ],
   resolve: {
-    root: path.resolve('./src'),
-    extensions: ['', '.js']
+    modules: [path.resolve('./src')],
+    extensions: ['.js']
   },
   devtool: "source-map"
 };
