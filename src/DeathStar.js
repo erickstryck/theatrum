@@ -20,6 +20,7 @@ export default class DeathStar {
     this.minf.bind(this);
     this.builder.bind(this);
     this.putStore.bind(this);
+    this.setContext.bind(this);
     this.getStore.bind(this);
     this.deleteStore.bind(this);
     this.keys.bind(this);
@@ -63,6 +64,16 @@ export default class DeathStar {
   }
 
   /**
+   * Insere o Contexto do elemento para manipulação remota por outro componente.
+   * 
+   * @param {string} key 
+   * @param {object} value 
+   */
+  setContext(key, value) {
+    this.putStore(key, value, true);
+  }
+
+  /**
    * Persiste os dados informados no repositório local. 
    * Você poderá persistir o contexto do componente e recuperar o mesmo posteriormente.
    * 
@@ -73,7 +84,11 @@ export default class DeathStar {
    */
   putStore(key, value, context) {
     if (context) {
-      value['deathStartUpdater'] = () => { value.forceUpdate(); };
+      value['update'] = () => {
+        value.setState({
+          deathStartUpdater: value.deathStartUpdater ? true : false
+        });
+      };
       let temp = {};
       Object.keys(value).map((current) => {
         if (typeof (value[current]) === 'function') {
