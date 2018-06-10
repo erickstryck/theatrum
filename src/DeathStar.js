@@ -21,6 +21,7 @@ export default class DeathStar {
     this.builder.bind(this);
     this.putStore.bind(this);
     this.setContext.bind(this);
+    this.getContext.bind(this);
     this.getStore.bind(this);
     this.deleteStore.bind(this);
     this.keys.bind(this);
@@ -71,6 +72,15 @@ export default class DeathStar {
    */
   setContext(key, value) {
     this.putStore(key, value, true);
+  }
+
+  /**
+   * Recupera o Contexto do elemento para manipulação remota por outro componente.
+   * 
+   * @param {string} key
+   */
+  getContext(key) {
+    this.getStore(key);
   }
 
   /**
