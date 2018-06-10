@@ -80,7 +80,7 @@ export default class DeathStar {
    * @param {string} key
    */
   getContext(key) {
-    this.getStore(key);
+    return this.getStore(key);
   }
 
   /**
