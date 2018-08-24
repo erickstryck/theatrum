@@ -1,5 +1,12 @@
 import deathStar from './DeathStar';
 export default class Bridge {
+
+  /**
+   * Representa a classe de ponte para manipulação dos elementos.
+   * @constructor
+   * 
+   * @param {string} key 
+   */
   constructor(key) {
     this.instance = deathStar.getInstance();
     this.key = this.instance.minf(key);

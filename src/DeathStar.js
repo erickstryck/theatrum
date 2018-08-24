@@ -6,7 +6,8 @@ let instance = '';
 export default class DeathStar {
 
   /**
-   * Construtor da classe
+   * Classe responsável por prover as funções da biblioteca.
+   * @constructor
    * 
    * @param {object} react 
    */
