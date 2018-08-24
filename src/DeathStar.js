@@ -431,7 +431,7 @@ export default class DeathStar {
    * 
    * @param {string} key 
    * @param {string} atrName 
-   * @param {*} value 
+   * @param {object} value 
    */
   processModify(key, atrName, value) {
     if (!key && !atrName && !value) {
@@ -511,7 +511,7 @@ export default class DeathStar {
    * 
    * @param {string} key 
    * @param {object} childrenVal 
-   * @param {integer} index 
+   * @param {number} index 
    * @param {boolean} mergeIndex 
    */
   setChildren(key, childrenVal, index = '', mergeIndex = false) {
@@ -575,7 +575,7 @@ export default class DeathStar {
    * Aplica a remoção do filho de acordo com os valores informados.
    * 
    * @param {string} key 
-   * @param {integer} index 
+   * @param {number} index 
    */
   processRemoveChildren(key, index) {
     index--;

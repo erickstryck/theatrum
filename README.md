@@ -201,7 +201,7 @@ Return manipulador
 ### Parameters
 
 -   `children` **[object][107]** 
--   `index` **integer**  (optional, default `''`)
+-   `index` **number**  (optional, default `''`)
 -   `mergeIndex` **[boolean][109]**  (optional, default `false`)
 
 Returns **[object][107]** 
@@ -215,7 +215,7 @@ Return manipulador
 
 ### Parameters
 
--   `index` **integer** 
+-   `index` **number** 
 
 Returns **[object][107]** 
 
@@ -520,7 +520,7 @@ Aplica as mudanças nos atributos de acordo com os valores informados.
 
 -   `key` **[string][106]** 
 -   `atrName` **[string][106]** 
--   `value` **any** 
+-   `value` **object** 
 
 ## removeAttribute
 
@@ -550,7 +550,7 @@ caso contrario o índice será acrescentado a partir da posição informada.
 
 -   `key` **[string][106]** 
 -   `childrenVal` **[object][107]** 
--   `index` **integer**  (optional, default `''`)
+-   `index` **number**  (optional, default `''`)
 -   `mergeIndex` **[boolean][109]**  (optional, default `false`)
 
 ## removeChildren
@@ -570,7 +570,7 @@ Aplica a remoção do filho de acordo com os valores informados.
 ### Parameters
 
 -   `key` **[string][106]** 
--   `index` **integer** 
+-   `index` **number** 
 
 ## processResetChildren
 
