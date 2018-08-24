@@ -28,7 +28,7 @@ export default class DeathStar {
   }
 
   /**
-   * Recupera a instancia corrente do react pelo componente que o utilizará
+   * Recupera a instância corrente do React pelo componente que o utilizará.
    * 
    * @param {object} react
    * @return {object}
@@ -43,7 +43,7 @@ export default class DeathStar {
   }
 
   /**
-   * Recria o componente informado com seu devido mapeamento para manipulação
+   * Recria o componente informado com seu devido mapeamento para manipulação.
    * 
    * @param {string | object} type 
    * @param {object} props 
@@ -65,7 +65,7 @@ export default class DeathStar {
   }
 
   /**
-   * Insere o Contexto do elemento para manipulação remota por outro componente.
+   * Insere o contexto do elemento para manipulação remota por outro componente.
    * 
    * @param {string} key 
    * @param {object} value 
@@ -75,7 +75,7 @@ export default class DeathStar {
   }
 
   /**
-   * Recupera o Contexto do elemento para manipulação remota por outro componente.
+   * Recupera o contexto do elemento para manipulação remota por outro componente.
    * 
    * @param {string} key
    */
@@ -85,7 +85,7 @@ export default class DeathStar {
 
   /**
    * Persiste os dados informados no repositório local. 
-   * Você poderá persistir o contexto do componente e recuperar o mesmo posteriormente.
+   * Poderá persistir o contexto do componente e recuperar o mesmo posteriormente.
    * 
    * @param {string} key 
    * @param {object} value 
@@ -114,7 +114,7 @@ export default class DeathStar {
   }
 
   /**
-   * Recupera o dado do repositório por meio da 'Key' informada 
+   * Recupera o dado do repositório por meio da 'Key' informada.
    * 
    * @param {string} key
    * @return {object}
@@ -124,7 +124,7 @@ export default class DeathStar {
   }
 
   /**
-   * Remove o objeto do repositório por meio da 'Key' informada
+   * Remove o objeto do repositório por meio da 'Key' informada.
    * 
    * @param {string} key 
    */
@@ -133,7 +133,7 @@ export default class DeathStar {
   }
 
   /**
-   * Recupera todas as chaves realcionadas aos objetos persistidos no repositório
+   * Recupera todas as chaves realcionadas aos objetos persistidos no repositório.
    * @return {array}
    */
   keys() {
@@ -224,7 +224,7 @@ export default class DeathStar {
   }
 
   /**
-   * Mapeia os filhos processados de um elemento para indexação no repositório
+   * Mapeia os filhos processados de um elemento para indexação no repositório.
    * 
    * @param {object} data 
    * @param {string} key 
@@ -247,7 +247,7 @@ export default class DeathStar {
   }
 
   /**
-   * Verifica se o tipo do componente já foi inserido no dicionário de tipos, caso não exista ele o insere
+   * Verifica se o tipo do componente já foi inserido no dicionário de tipos, caso não exista ele o insere.
    * 
    * @param {string} type
    * @return {string}
@@ -309,7 +309,7 @@ export default class DeathStar {
   }
 
   /**
-   * Recupera um elemento do repositório para renderização
+   * Recupera um elemento do repositório para renderização.
    * 
    * @param {string} key
    * @return {object}
@@ -328,7 +328,7 @@ export default class DeathStar {
   }
 
   /**
-   * Recupera do repositório e insere um novo Props no elemento relacionado a key informada.
+   * Insere o novo objeto de propriedades ao elemento substituindo as antigas propriedades, o elemento será encontrado pela chave informada.
    * 
    * @param {string} key 
    * @param {object} props 
@@ -351,7 +351,7 @@ export default class DeathStar {
   }
 
   /**
-   * Realiza a descoberta de elementos filhos de um elemento e retorna os elementos encontrados.
+   * Retorna todos os filhos de um elemento recursivamente.
    * 
    * @param {object} data 
    * @param {string} key
@@ -377,7 +377,7 @@ export default class DeathStar {
   }
 
   /**
-   * Recupera o elemento por meio de sua chave e realiza a cópia do mesmo por meio da nova chave
+   * Recupera o elemento por meio de sua chave e realiza uma cópia aplicando a ela uma nova chave.
    * 
    * @param {string} key 
    * @param {string} keyNew
@@ -456,7 +456,7 @@ export default class DeathStar {
   }
 
   /**
-   * Recupera o elemento do repositório e realiza a remoção dos atributos informados
+   * Recupera o elemento do repositório e realiza a remoção dos atributos informados.
    * 
    * @param {string} key 
    * @param {array | string} attValues 
@@ -504,7 +504,9 @@ export default class DeathStar {
   }
 
   /**
-   * Realiza a inserção de um elemento filho em um outro elemento especificado pela chave.
+   * Realiza a inserção de um elemento filho em um outro elemento especificado pela chave, 
+   * poderá ser informado o índice onde será inserido o objeto, caso a flag "mergeIndex" for informada o conteúdo do índice antigo será substituído 
+   * caso contrario o índice será acrescentado a partir da posição informada.
    * 
    * @param {string} key 
    * @param {object} childrenVal 
@@ -552,8 +554,8 @@ export default class DeathStar {
   }
 
   /**
-   * Recupera um elemento pela chave e realiza a remoção do filho especificado pela indice informado.
-   * o indice obedece a regra da ordem dos filhos do elemento pai.
+   * Recupera um elemento pela chave e realiza a remoção do filho especificado pelo índice informado
+   * o índice obedece a regra da ordem dos filhos do elemento pai.
    * 
    * @param {string} key 
    * @param {intger} index 
@@ -611,7 +613,7 @@ export default class DeathStar {
   }
 
   /**
-   * Realiza a atualização das mudanças em todo o repositório
+   * Realiza a atualização das mudanças em todo os elementos do repositório.
    * 
    * @param {object} obj 
    */
@@ -697,7 +699,7 @@ export default class DeathStar {
   }
 
   /**
-   * Verifica se o elemento relacionado a chave informada contém props.
+   * Verifica se o elemento relacionado a chave informada contém propriedades.
    * 
    * @param {string} key
    * @return {boolean} 

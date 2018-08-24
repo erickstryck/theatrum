@@ -5,7 +5,8 @@ export default class Bridge {
     this.key = this.instance.minf(key);
   }
   /**
-   * Retorna a chave relacionada a manipulação corrente
+   * Função de ponte de Maniplação.
+   * Retorna a chave relacionada a manipulação corrente.
    * 
    * @return {string}
    */
@@ -14,7 +15,8 @@ export default class Bridge {
   }
 
   /**
-   * Recupera o elemento relacionado a chave deste manipulador para renderização
+   * Função de ponte de Maniplação.
+   * Recupera o elemento relacionado a chave deste manipulador para renderização.
    * 
    * @return {object}
    */
@@ -23,7 +25,8 @@ export default class Bridge {
   }
 
   /**
-   * Recupera o elemento relacionado a chave deste manipulador e realiza a cópia do mesmo por meio da nova chave
+   * Função de ponte de Maniplação.
+   * Recupera o elemento por meio de sua chave e realiza uma cópia aplicando a ela uma nova chave.
    * 
    * @param {string} newKey
    * @return {object | undefined}
@@ -33,6 +36,7 @@ export default class Bridge {
   }
 
   /**
+   * Função de ponte de Maniplação.
    * Insere novos atributos no objeto relacionado a chave deste manipulador.
    * Return manipulador
    * 
@@ -45,7 +49,8 @@ export default class Bridge {
   }
 
   /**
-   * Recupera do repositório e insere um novo Props no elemento relacionado a chave deste manipulador.
+   * Função de ponte de Maniplação.
+   * Insere o novo objeto de propriedades ao elemento substituindo as antigas propriedades, o elemento será encontrado pela chave deste manipulador.
    * Return manipulador
    * 
    * @param {object} props
@@ -57,6 +62,7 @@ export default class Bridge {
   }
 
   /**
+   * Função de ponte de Maniplação.
    * Reaplica um novo valor ao atributo passado ao objeto relacionado a chave deste manipulador.
    * Return manipulador
    * 
@@ -69,7 +75,8 @@ export default class Bridge {
   }
 
   /**
-   * Recupera o elemento do repositório relacionado a chave deste manipulador e realiza a remoção dos atributos informados
+   * Função de ponte de Maniplação.
+   * Recupera o elemento do repositório relacionado a chave deste manipulador e realiza a remoção dos atributos informados.
    * Return manipulador
    * 
    * @param {string} atrName
@@ -81,6 +88,7 @@ export default class Bridge {
   }
 
   /**
+   * Função de ponte de Maniplação.
    * Realiza a inserção de um elemento filho em um outro elemento especificado relacionado a chave deste manipulador.
    * Return manipulador
    * 
@@ -95,7 +103,8 @@ export default class Bridge {
   }
 
   /**
-   * Recupera um elemento relacionado a chave deste manipulador e realiza a remoção do filho especificado pela índice informado.
+   * Função de ponte de Maniplação.
+   * Recupera um elemento relacionado a chave deste manipulador e realiza a remoção do filho especificado pela índice informado
    * o índice obedece a regra da ordem dos filhos do elemento pai.
    * Return manipulador
    * 
@@ -108,6 +117,7 @@ export default class Bridge {
   }
 
   /**
+   * Função de ponte de Maniplação.
    * Verifica se o elemento relacionado a chave deste manipulador contém o atributo indicado.
    * 
    * @param {string} atrName
@@ -118,6 +128,7 @@ export default class Bridge {
   }
 
   /**
+   * Função de ponte de Maniplação.
    * Recupera o elemento React relacionado a chave deste manipulador, cria uma cópia com a nova chave e o disponibiliza para manipulação.
    * 
    * @param {string} newKey
@@ -128,7 +139,8 @@ export default class Bridge {
   }
 
   /**
-   * Carrega este manipulador de elemento com a nova chave informada
+   * Função de ponte de Maniplação.
+   * Carrega este manipulador de elemento com a nova chave informada.
    * Return manipulador
    * 
    * @param {string} key 
@@ -140,6 +152,7 @@ export default class Bridge {
   }
 
   /**
+   * Função de ponte de Maniplação.
    * Destrói os elementos React do repositório por meio da lista de Arrays informados.
    * Return manipulador
    * 
