@@ -511,7 +511,7 @@ export default class DeathStar {
    * 
    * @param {string} key 
    * @param {object} childrenVal 
-   * @param {number} index 
+   * @param {numeric} index 
    * @param {boolean} mergeIndex 
    */
   setChildren(key, childrenVal, index = '', mergeIndex = false) {
@@ -575,7 +575,7 @@ export default class DeathStar {
    * Aplica a remoção do filho de acordo com os valores informados.
    * 
    * @param {string} key 
-   * @param {number} index 
+   * @param {numeric} index 
    */
   processRemoveChildren(key, index) {
     index--;

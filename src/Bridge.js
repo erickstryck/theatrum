@@ -100,7 +100,7 @@ export default class Bridge {
    * Return manipulador
    * 
    * @param {object} children 
-   * @param {number} index 
+   * @param {numeric} index 
    * @param {boolean} mergeIndex
    * @return {object}
    */
@@ -115,7 +115,7 @@ export default class Bridge {
    * o índice obedece a regra da ordem dos filhos do elemento pai.
    * Return manipulador
    * 
-   * @param {number} index
+   * @param {numeric} index
    * @return {object}
    */
   removeChildren(index) {
