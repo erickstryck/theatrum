@@ -201,7 +201,7 @@ Return manipulador
 ### Parameters
 
 -   `children` **[object][107]** 
--   `index` **numeric**  (optional, default `''`)
+-   `index` **Number**  (optional, default `''`)
 -   `mergeIndex` **[boolean][109]**  (optional, default `false`)
 
 Returns **[object][107]** 
@@ -215,7 +215,7 @@ Return manipulador
 
 ### Parameters
 
--   `index` **numeric** 
+-   `index` **Number** 
 
 Returns **[object][107]** 
 
@@ -550,7 +550,7 @@ caso contrario o índice será acrescentado a partir da posição informada.
 
 -   `key` **[string][106]** 
 -   `childrenVal` **[object][107]** 
--   `index` **numeric**  (optional, default `''`)
+-   `index` **Number**  (optional, default `''`)
 -   `mergeIndex` **[boolean][109]**  (optional, default `false`)
 
 ## removeChildren
@@ -570,7 +570,7 @@ Aplica a remoção do filho de acordo com os valores informados.
 ### Parameters
 
 -   `key` **[string][106]** 
--   `index` **numeric** 
+-   `index` **Number** 
 
 ## processResetChildren
 
