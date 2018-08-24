@@ -1,10 +1,9 @@
 {
   "name": "react-deathstar",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Create, Manipulate and Destroy React Elements easily",
   "main": "./lib/index",
   "scripts": {
-    "lint": "eslint src",
     "prebuild": "rimraf lib && babel src -d lib",
     "build": "webpack --config webpack.config.js"
   },
