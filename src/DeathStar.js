@@ -506,8 +506,8 @@ export default class DeathStar {
 
   /**
    * Realiza a inserção de um elemento filho em um outro elemento especificado pela chave, 
-   * poderá ser informado o índice onde será inserido o objeto, caso a flag "mergeIndex" for informada o conteúdo do índice antigo será substituído 
-   * caso contrario o índice será acrescentado a partir da posição informada.
+   * poderá ser informado o índice onde será inserido o objeto, caso a flag "mergeIndex" for informada o conteúdo será mergeado na fila sem nenhuma
+   * remoção dos itens existentes. A fila de elementos será empurrada para acomodar o novo elemento no indice informado.
    * 
    * @param {string} key 
    * @param {object} childrenVal 

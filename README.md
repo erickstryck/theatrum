@@ -121,21 +121,21 @@ Representa a classe de ponte para manipulação dos elementos.
 
 ## getMyKey
 
-Função de ponte de Maniplação.
+Função de ponte de Manipulação.
 Retorna a chave relacionada a manipulação corrente.
 
 Returns **[string][106]** 
 
 ## getElement
 
-Função de ponte de Maniplação.
+Função de ponte de Manipulação.
 Recupera o elemento relacionado a chave deste manipulador para renderização.
 
 Returns **[object][107]** 
 
 ## copy
 
-Função de ponte de Maniplação.
+Função de ponte de Manipulação.
 Recupera o elemento por meio de sua chave e realiza uma cópia aplicando a ela uma nova chave.
 
 ### Parameters
@@ -146,7 +146,7 @@ Returns **([object][107] \| [undefined][108])**
 
 ## setAttribute
 
-Função de ponte de Maniplação.
+Função de ponte de Manipulação.
 Insere novos atributos no objeto relacionado a chave deste manipulador.
 Return manipulador
 
@@ -158,7 +158,7 @@ Returns **[object][107]**
 
 ## setProps
 
-Função de ponte de Maniplação.
+Função de ponte de Manipulação.
 Insere o novo objeto de propriedades ao elemento substituindo as antigas propriedades, o elemento será encontrado pela chave deste manipulador.
 Return manipulador
 
@@ -170,7 +170,7 @@ Returns **[object][107]**
 
 ## modifyAttribute
 
-Função de ponte de Maniplação.
+Função de ponte de Manipulação.
 Reaplica um novo valor ao atributo passado ao objeto relacionado a chave deste manipulador.
 Return manipulador
 
@@ -182,7 +182,7 @@ Returns **[object][107]**
 
 ## removeAttribute
 
-Função de ponte de Maniplação.
+Função de ponte de Manipulação.
 Recupera o elemento do repositório relacionado a chave deste manipulador e realiza a remoção dos atributos informados.
 Return manipulador
 
@@ -194,45 +194,47 @@ Returns **[object][107]**
 
 ## setChildren
 
-Função de ponte de Maniplação.
-Realiza a inserção de um elemento filho em um outro elemento especificado relacionado a chave deste manipulador.
+Função de ponte de Manipulação.
+Realiza a inserção de um elemento filho em um outro elemento especificado pela chave, 
+poderá ser informado o índice onde será inserido o objeto, caso a flag "mergeIndex" for informada o conteúdo será mergeado na fila sem nenhuma
+remoção dos itens existentes. A fila de elementos será empurrada para acomodar o novo elemento no indice informado.
 Return manipulador
 
 ### Parameters
 
 -   `children` **[object][107]** 
--   `index` **Number**  (optional, default `''`)
--   `mergeIndex` **[boolean][109]**  (optional, default `false`)
+-   `index` **[Number][109]**  (optional, default `''`)
+-   `mergeIndex` **[boolean][110]**  (optional, default `false`)
 
 Returns **[object][107]** 
 
 ## removeChildren
 
-Função de ponte de Maniplação.
+Função de ponte de Manipulação.
 Recupera um elemento relacionado a chave deste manipulador e realiza a remoção do filho especificado pela índice informado
 o índice obedece a regra da ordem dos filhos do elemento pai.
 Return manipulador
 
 ### Parameters
 
--   `index` **Number** 
+-   `index` **[Number][109]** 
 
 Returns **[object][107]** 
 
 ## checkAttribute
 
-Função de ponte de Maniplação.
+Função de ponte de Manipulação.
 Verifica se o elemento relacionado a chave deste manipulador contém o atributo indicado.
 
 ### Parameters
 
 -   `atrName` **[string][106]** 
 
-Returns **[boolean][109]** 
+Returns **[boolean][110]** 
 
 ## manipulateCopy
 
-Função de ponte de Maniplação.
+Função de ponte de Manipulação.
 Recupera o elemento React relacionado a chave deste manipulador, cria uma cópia com a nova chave e o disponibiliza para manipulação.
 
 ### Parameters
@@ -243,7 +245,7 @@ Returns **[object][107]**
 
 ## manipulate
 
-Função de ponte de Maniplação.
+Função de ponte de Manipulação.
 Carrega este manipulador de elemento com a nova chave informada.
 Return manipulador
 
@@ -255,13 +257,13 @@ Returns **[object][107]**
 
 ## destroy
 
-Função de ponte de Maniplação.
+Função de ponte de Manipulação.
 Destrói os elementos React do repositório por meio da lista de Arrays informados.
 Return manipulador
 
 ### Parameters
 
--   `keys` **([array][110] \| [string][106])** 
+-   `keys` **([array][111] \| [string][106])** 
 
 Returns **[object][107]** 
 
@@ -315,7 +317,7 @@ Poderá persistir o contexto do componente e recuperar o mesmo posteriormente.
 
 -   `key` **[string][106]** 
 -   `value` **[object][107]** 
--   `context` **[boolean][109]** 
+-   `context` **[boolean][110]** 
 
 Returns **([object][107] \| [undefined][108])** 
 
@@ -341,7 +343,7 @@ Remove o objeto do repositório por meio da 'Key' informada.
 
 Recupera todas as chaves realcionadas aos objetos persistidos no repositório.
 
-Returns **[array][110]** 
+Returns **[array][111]** 
 
 ## destroy
 
@@ -349,7 +351,7 @@ Destrói os elementos React do repositório por meio da lista de Arrays informad
 
 ### Parameters
 
--   `keys` **([array][110] \| [string][106])** 
+-   `keys` **([array][111] \| [string][106])** 
 
 ## minf
 
@@ -368,7 +370,7 @@ Prepara um container de informações para serem criadas e indexadas.
 ### Parameters
 
 -   `data` **[object][107]** 
--   `copy` **[boolean][109]**  (optional, default `false`)
+-   `copy` **[boolean][110]**  (optional, default `false`)
 
 Returns **[object][107]** 
 
@@ -378,8 +380,8 @@ Processa os filhos de um elemento React para que possam ser mapeados para manipu
 
 ### Parameters
 
--   `children` **([object][107] \| [array][110])** 
--   `copy` **[boolean][109]** 
+-   `children` **([object][107] \| [array][111])** 
+-   `copy` **[boolean][110]** 
 
 Returns **[object][107]** 
 
@@ -391,7 +393,7 @@ Processa um elemento React para que possam ser mapeado para manipulação.
 
 -   `data` **[object][107]** 
 -   `key` **[string][106]** 
--   `copy` **[boolean][109]**  (optional, default `false`)
+-   `copy` **[boolean][110]**  (optional, default `false`)
 
 Returns **[object][107]** 
 
@@ -428,7 +430,7 @@ Insere no repositório um elemento react novo
 
 -   `key` **[string][106]** 
 -   `jsxData` **[object][107]** 
--   `copy` **[boolean][109]**  (optional, default `false`)
+-   `copy` **[boolean][110]**  (optional, default `false`)
 
 Returns **[object][107]** 
 
@@ -481,7 +483,7 @@ Retorna todos os filhos de um elemento recursivamente.
 -   `data` **[object][107]** 
 -   `key` **[string][106]** 
 
-Returns **[array][110]** 
+Returns **[array][111]** 
 
 ## copy
 
@@ -520,7 +522,7 @@ Aplica as mudanças nos atributos de acordo com os valores informados.
 
 -   `key` **[string][106]** 
 -   `atrName` **[string][106]** 
--   `value` **object** 
+-   `value` **[object][107]** 
 
 ## removeAttribute
 
@@ -529,7 +531,7 @@ Recupera o elemento do repositório e realiza a remoção dos atributos informad
 ### Parameters
 
 -   `key` **[string][106]** 
--   `attValues` **([array][110] \| [string][106])** 
+-   `attValues` **([array][111] \| [string][106])** 
 
 ## processRemove
 
@@ -543,15 +545,15 @@ Aplica a remoção dos atributos de acordo com os valores informados.
 ## setChildren
 
 Realiza a inserção de um elemento filho em um outro elemento especificado pela chave, 
-poderá ser informado o índice onde será inserido o objeto, caso a flag "mergeIndex" for informada o conteúdo do índice antigo será substituído 
-caso contrario o índice será acrescentado a partir da posição informada.
+poderá ser informado o índice onde será inserido o objeto, caso a flag "mergeIndex" for informada o conteúdo será mergeado na fila sem nenhuma
+remoção dos itens existentes. A fila de elementos será empurrada para acomodar o novo elemento no indice informado.
 
 ### Parameters
 
 -   `key` **[string][106]** 
 -   `childrenVal` **[object][107]** 
--   `index` **Number**  (optional, default `''`)
--   `mergeIndex` **[boolean][109]**  (optional, default `false`)
+-   `index` **[Number][109]**  (optional, default `''`)
+-   `mergeIndex` **[boolean][110]**  (optional, default `false`)
 
 ## removeChildren
 
@@ -570,7 +572,7 @@ Aplica a remoção do filho de acordo com os valores informados.
 ### Parameters
 
 -   `key` **[string][106]** 
--   `index` **Number** 
+-   `index` **[Number][109]** 
 
 ## processResetChildren
 
@@ -631,7 +633,7 @@ Verifica se existe algum item no repositório relacionado a chave informada.
 
 -   `key` **[string][106]** 
 
-Returns **[boolean][109]** 
+Returns **[boolean][110]** 
 
 ## checkProps
 
@@ -641,7 +643,7 @@ Verifica se o elemento relacionado a chave informada contém propriedades.
 
 -   `key` **[string][106]** 
 
-Returns **[boolean][109]** 
+Returns **[boolean][110]** 
 
 ## checkAttribute
 
@@ -652,7 +654,7 @@ Verifica se o elemento relacionado a chave informada contém o atributo indicado
 -   `key` **[string][106]** 
 -   `atrName` **[string][106]** 
 
-Returns **[boolean][109]** 
+Returns **[boolean][110]** 
 
 ## getInstance
 
@@ -880,6 +882,8 @@ Returns **[object][107]**
 
 [108]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined
 
-[109]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[109]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
 
-[110]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[110]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+
+[111]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array

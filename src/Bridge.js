@@ -12,7 +12,7 @@ export default class Bridge {
     this.key = this.instance.minf(key);
   }
   /**
-   * Função de ponte de Maniplação.
+   * Função de ponte de Manipulação.
    * Retorna a chave relacionada a manipulação corrente.
    * 
    * @return {string}
@@ -22,7 +22,7 @@ export default class Bridge {
   }
 
   /**
-   * Função de ponte de Maniplação.
+   * Função de ponte de Manipulação.
    * Recupera o elemento relacionado a chave deste manipulador para renderização.
    * 
    * @return {object}
@@ -32,7 +32,7 @@ export default class Bridge {
   }
 
   /**
-   * Função de ponte de Maniplação.
+   * Função de ponte de Manipulação.
    * Recupera o elemento por meio de sua chave e realiza uma cópia aplicando a ela uma nova chave.
    * 
    * @param {string} newKey
@@ -43,7 +43,7 @@ export default class Bridge {
   }
 
   /**
-   * Função de ponte de Maniplação.
+   * Função de ponte de Manipulação.
    * Insere novos atributos no objeto relacionado a chave deste manipulador.
    * Return manipulador
    * 
@@ -56,7 +56,7 @@ export default class Bridge {
   }
 
   /**
-   * Função de ponte de Maniplação.
+   * Função de ponte de Manipulação.
    * Insere o novo objeto de propriedades ao elemento substituindo as antigas propriedades, o elemento será encontrado pela chave deste manipulador.
    * Return manipulador
    * 
@@ -69,7 +69,7 @@ export default class Bridge {
   }
 
   /**
-   * Função de ponte de Maniplação.
+   * Função de ponte de Manipulação.
    * Reaplica um novo valor ao atributo passado ao objeto relacionado a chave deste manipulador.
    * Return manipulador
    * 
@@ -82,7 +82,7 @@ export default class Bridge {
   }
 
   /**
-   * Função de ponte de Maniplação.
+   * Função de ponte de Manipulação.
    * Recupera o elemento do repositório relacionado a chave deste manipulador e realiza a remoção dos atributos informados.
    * Return manipulador
    * 
@@ -95,11 +95,13 @@ export default class Bridge {
   }
 
   /**
-   * Função de ponte de Maniplação.
-   * Realiza a inserção de um elemento filho em um outro elemento especificado relacionado a chave deste manipulador.
+   * Função de ponte de Manipulação.
+   * Realiza a inserção de um elemento filho em um outro elemento especificado pela chave, 
+   * poderá ser informado o índice onde será inserido o objeto, caso a flag "mergeIndex" for informada o conteúdo será mergeado na fila sem nenhuma
+   * remoção dos itens existentes. A fila de elementos será empurrada para acomodar o novo elemento no indice informado.
    * Return manipulador
    * 
-   * @param {object} children 
+   * @param {object} children
    * @param {Number} index 
    * @param {boolean} mergeIndex
    * @return {object}
@@ -110,7 +112,7 @@ export default class Bridge {
   }
 
   /**
-   * Função de ponte de Maniplação.
+   * Função de ponte de Manipulação.
    * Recupera um elemento relacionado a chave deste manipulador e realiza a remoção do filho especificado pela índice informado
    * o índice obedece a regra da ordem dos filhos do elemento pai.
    * Return manipulador
@@ -124,7 +126,7 @@ export default class Bridge {
   }
 
   /**
-   * Função de ponte de Maniplação.
+   * Função de ponte de Manipulação.
    * Verifica se o elemento relacionado a chave deste manipulador contém o atributo indicado.
    * 
    * @param {string} atrName
@@ -135,7 +137,7 @@ export default class Bridge {
   }
 
   /**
-   * Função de ponte de Maniplação.
+   * Função de ponte de Manipulação.
    * Recupera o elemento React relacionado a chave deste manipulador, cria uma cópia com a nova chave e o disponibiliza para manipulação.
    * 
    * @param {string} newKey
@@ -146,7 +148,7 @@ export default class Bridge {
   }
 
   /**
-   * Função de ponte de Maniplação.
+   * Função de ponte de Manipulação.
    * Carrega este manipulador de elemento com a nova chave informada.
    * Return manipulador
    * 
@@ -159,7 +161,7 @@ export default class Bridge {
   }
 
   /**
-   * Função de ponte de Maniplação.
+   * Função de ponte de Manipulação.
    * Destrói os elementos React do repositório por meio da lista de Arrays informados.
    * Return manipulador
    * 
