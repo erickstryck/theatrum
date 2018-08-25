@@ -686,7 +686,7 @@ ComponenteDiv-span6
 
 Todas as chaves acima estão disponíves para serem utilizadas com 'getElement' ou 'manipulate'.
 
-## Ciclo de vida dos componentes aramazenados.
+## Ciclo de vida dos componentes armazenados.
 
 Como dito anteriormente essa biblioteca se trata de um grande armazem de componentes autogerenciados. Quando ser é mapeado um elemento ele perde comunicação com o ciclo de vida normal dos componentes do react e entra em um estado de 'sono' esperando para ser manipulado ou renderizado, para manter os componentes nesse armazem sempre com seus 'props' sempre atualizados se faz necessário utilizar a função 'setProps' sempre que o elemento pai passa por uma atualização. É interessante atualizar as chaves ao disparar os eventos nas funções ('componentWillUpdate' ou na função 'componentWillReceiveProps' [funções descontinuadas]) 'getDerivedStateFromProps' ou 'getSnapshotBeforeUpdate', assim quando for utilizar seus componentes mapeados todos os 'props' estarão atualizados. Ex:
 
