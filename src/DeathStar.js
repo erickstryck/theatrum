@@ -1,5 +1,14 @@
 import Bridge from './Bridge';
-import ninf from '../minify.conf';
+
+/**
+ * Responsável por importar o arquivo de configuração da minificação
+ */
+var ninify = "";
+try {
+  ninify = require('../../../death-star-minify.conf');
+} catch (e) {
+  ninify = { minify: false };
+}
 
 let instance = '';
 
@@ -17,7 +26,7 @@ export default class DeathStar {
     this.setStore.bind(this);
     this.checkKey.bind(this);
     this.htmlDict = [];
-    this.minify = ninf.minify;
+    this.minify = ninify.minify;
     this.minf.bind(this);
     this.builder.bind(this);
     this.putStore.bind(this);
