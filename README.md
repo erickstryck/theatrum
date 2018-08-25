@@ -52,7 +52,7 @@ export default class MyProject extends Component {
 
   processElements(){
       this.deathStar.processElement(
-          <div className="teste">
+          <div className="test">
             <span className="colorRed">1</span>
             <span className="colorBlue">2</span>
             <span className="colorGreen">3</span>
@@ -85,7 +85,7 @@ export default class MyProject extends Component {
 
   processElements(){
       this.deathStar.processElement(
-          <div className="teste">
+          <div className="test">
             <span className="colorRed">1</span>
             <span className="colorBlue">2</span>
             <span className="colorGreen">3</span>
@@ -122,7 +122,7 @@ export default class MyProject extends Component {
 
   processElements(){
       this.deathStar.processElement(
-          <div className="teste">
+          <div className="test">
             <span className="colorRed">1</span>
             <span className="colorBlue">2</span>
             <span className="colorGreen">3</span>
@@ -161,7 +161,7 @@ export default class MyProject extends Component {
 
   processElements(){
      let manipulateDiv = this.deathStar.processElement(
-          <div className="teste">
+          <div className="test">
             <span className="colorRed">1</span>
             <span className="colorBlue">2</span>
             <span className="colorGreen">3</span>
@@ -194,7 +194,7 @@ export default class MyProject extends Component {
 
   processElements(){
       this.deathStar.processElement(
-          <div className="teste">
+          <div className="test">
             <span className="colorRed">1</span>
             <span className="colorBlue">2</span>
             <span className="colorGreen">3</span>
@@ -245,7 +245,7 @@ Com o manipulador do elemento agora podemos utilizar as funções de manipulaç�
 No exemplo acima adicionamos o 'id' 'spanGreen' ao terceiro span de nosso elemento div, ao recuperarmos nosso componente por meio da função 'getElement' teremos então:
 
 ```
-<div className="teste">
+<div className="test">
     <span className="colorRed">1</span>
     <span className="colorBlue">2</span>
     <span className="colorGreen" id="spanGreen">3</span>
@@ -267,10 +267,11 @@ Mais um exemplo, agora vamos inserir um atributo no elemento pai:
  ...
 
 ```
+
 Resultado:
 
 ```
-<div className="teste" id="divSpanList">
+<div className="test" id="divSpanList">
     <span className="colorRed">1</span>
     <span className="colorBlue">2</span>
     <span className="colorGreen" id="spanGreen">3</span>
@@ -279,4 +280,219 @@ Resultado:
     <span className="colorOrange">6</span>
 </div>
 ```
+
+```
+    *Também é possível utilizar essa função para inserir um 'props' personalizado.
+```
+
+### Função modifyAttribute
+
+Podemos modificar um atributo utilizando a função 'modifyAttribute', vamos supor que queremos modificar a 'className' do elemento 'div' e posteriormente modificar o 'id' da terceira 'span':
+
+
+```
+ ...
+ 
+  manipulateElement(){
+    let manipulateDiv = this.deathStar.manipulate("ComponenteDiv");
+    manipulateDiv.modifyAttribute({'className':'testClass'});
+    let manipulateSpan3 = this.deathStar.manipulate("ComponenteDiv-span3");
+    manipulateSpan3.modifyAttribute({'id':'spanTest'});
+  }
+
+ ...
+
+```
+
+Podemos fazer isso de uma maneira mais curta que produzirá o mesmo resultado. Ex:
+
+```
+ ...
+ 
+  manipulateElement(){
+    this.deathStar.manipulate("ComponenteDiv")
+        .modifyAttribute({'className':'testClass'})
+        .manipulate("ComponenteDiv-span3")
+        .modifyAttribute({'id':'spanTest'});
+  }
+
+ ...
+
+```
+
+Os exemplos acima produzem o seguinte resultado:
+
+```
+<div className="testClass" id="divSpanList">
+    <span className="colorRed">1</span>
+    <span className="colorBlue">2</span>
+    <span className="colorGreen" id="spanTest">3</span>
+    <span className="colorYellow">4</span>
+    <span className="colorBlack">5</span>
+    <span className="colorOrange">6</span>
+</div>
+```
+
+```
+    *Também é possível utilizar essa função para modificar um 'props' personalizado.
+```
+### Função removeAttribute
+
+Do mesmo modo que criamos e modificamos os atributos de um elemento podemos também removê-lo, utilizando a função 'removeAttribute' isso é possível. A função necessita do nome do atributo a ser removido, ou de uma lista de atributos a serem removidos. Abaixo iremos remover o atributo 'classeName' e o 'id' da 'div' e também o 'id' do terceiro 'span' do elemento pai. Ex:
+
+```
+ ...
+ 
+  manipulateElement(){
+    this.deathStar.manipulate("ComponenteDiv")
+        .removeAttribute(['classeName','id'])
+        .manipulate("ComponenteDiv-span3")
+        .removeAttribute('id');
+  }
+
+ ...
+
+```
+
+O exemplo acima produz o seguinte resultado:
+
+```
+<div>
+    <span className="colorRed">1</span>
+    <span className="colorBlue">2</span>
+    <span className="colorGreen">3</span>
+    <span className="colorYellow">4</span>
+    <span className="colorBlack">5</span>
+    <span className="colorOrange">6</span>
+</div>
+```
+
+```
+    *Também é possível utilizar essa função para remover um 'props' personalizado.
+```
+
+### Função setChildren
+
+É possível inserir um ou mais filhos ao elemento pai por meio do manipulador, a função 'setChildren' permite a inserção de um elemento ou de uma lista de elementos ao elemento pai, caso passe apenas um elemento ou um lista de elementos estes serão adicionados depois de todos os elemento já existentes. Ex:
+
+```
+ ...
+ 
+  manipulateElement(){
+    this.deathStar.manipulate("ComponenteDiv")
+        .setChildren(<span className="colorOrange">7</span>);
+  }
+
+ ...
+
+```
+
+O exemplo acima produz o seguinte resultado:
+
+```
+<div>
+    <span className="colorRed">1</span>
+    <span className="colorBlue">2</span>
+    <span className="colorGreen">3</span>
+    <span className="colorYellow">4</span>
+    <span className="colorBlack">5</span>
+    <span className="colorOrange">6</span>
+    <span className="colorOrange">7</span>
+</div>
+```
+
+Agora iremos passar uma lista de novos elementos:
+
+```
+ ...
+ 
+  manipulateElement(){
+    this.deathStar.manipulate("ComponenteDiv")
+        .setChildren([
+            <span className="colorOrange">7</span>,
+            <span className="colorOrange">8</span>,
+            <span className="colorOrange">9</span>
+        ]);
+  }
+
+ ...
+
+```
+
+O exemplo acima produz o seguinte resultado:
+
+```
+<div>
+    <span className="colorRed">1</span>
+    <span className="colorBlue">2</span>
+    <span className="colorGreen">3</span>
+    <span className="colorYellow">4</span>
+    <span className="colorBlack">5</span>
+    <span className="colorOrange">6</span>
+    <span className="colorOrange">7</span>
+    <span className="colorOrange">8</span>
+    <span className="colorOrange">9</span>
+</div>
+```
+
+Agora vamos inserir no lugar da nossa terceira 'span' um novo elemento:
+
+
+```
+ ...
+ 
+  manipulateElement(){
+    this.deathStar.manipulate("ComponenteDiv")
+        .setChildren(<p>teste</p>, 3);
+  }
+
+ ...
+
+```
+O exemplo acima produz o seguinte resultado:
+
+```
+<div>
+    <span className="colorRed">1</span>
+    <span className="colorBlue">2</span>
+    <p>teste</p>
+    <span className="colorYellow">4</span>
+    <span className="colorBlack">5</span>
+    <span className="colorOrange">6</span>
+    <span className="colorOrange">7</span>
+    <span className="colorOrange">8</span>
+    <span className="colorOrange">9</span>
+</div>
+```
+
+Caso deseje adicionar um elemento após um índice informado sem que nada seja excluído, passe a flag 'true' na terceira entrada de parâmetro da função:
+
+```
+ ...
+ 
+  manipulateElement(){
+    this.deathStar.manipulate("ComponenteDiv")
+        .setChildren(<p>teste</p>, 3 , true);
+  }
+
+ ...
+
+```
+O exemplo acima produz o seguinte resultado:
+
+```
+<div>
+    <span className="colorRed">1</span>
+    <span className="colorBlue">2</span>
+    <span className="colorGreen">3</span>
+    <p>teste</p>
+    <span className="colorYellow">4</span>
+    <span className="colorBlack">5</span>
+    <span className="colorOrange">6</span>
+    <span className="colorOrange">7</span>
+    <span className="colorOrange">8</span>
+    <span className="colorOrange">9</span>
+</div>
+```
+
 Continue ...
