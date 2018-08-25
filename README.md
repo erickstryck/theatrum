@@ -495,4 +495,81 @@ O exemplo acima produz o seguinte resultado:
 </div>
 ```
 
+### Função removeChildren
+
+Para removermos um ou mais filhos de um elemento podemos utilizar a função 'removeChildren', podemos deletar um elemento filho pelo índice informado, uma lista de índices ou deletar todos os filhos de um elemento passando o índice '-1', veja alguns exemplos abaixo:
+
+Deletando um índice:
+
+```
+ ...
+ 
+  manipulateElement(){
+    this.deathStar.manipulate("ComponenteDiv")
+        .removeChildren(3);
+  }
+
+ ...
+
+```
+O exemplo acima produz o seguinte resultado:
+
+```
+<div>
+    <span className="colorRed">1</span>
+    <span className="colorBlue">2</span>
+    <span className="colorYellow">4</span>
+    <span className="colorBlack">5</span>
+    <span className="colorOrange">6</span>
+    <span className="colorOrange">7</span>
+    <span className="colorOrange">8</span>
+    <span className="colorOrange">9</span>
+</div>
+```
+
+Deletando uma lista de índices:
+
+```
+ ...
+ 
+  manipulateElement(){
+    this.deathStar.manipulate("ComponenteDiv")
+        .removeChildren([3, 5, 9]);
+  }
+
+ ...
+
+```
+O exemplo acima produz o seguinte resultado:
+
+```
+<div>
+    <span className="colorRed">1</span>
+    <span className="colorBlue">2</span>
+    <span className="colorYellow">4</span>
+    <span className="colorOrange">6</span>
+    <span className="colorOrange">7</span>
+    <span className="colorOrange">8</span>
+</div>
+```
+
+Deletando todos os filhos do elemento:
+
+```
+ ...
+ 
+  manipulateElement(){
+    this.deathStar.manipulate("ComponenteDiv")
+        .removeChildren(-1);
+  }
+
+ ...
+
+```
+O exemplo acima produz o seguinte resultado:
+
+```
+<div>
+</div>
+```
 Continue ...
