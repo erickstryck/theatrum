@@ -48,10 +48,15 @@ export default class Bridge {
    * Return manipulador
    * 
    * @param {object} attributes
+   * @param {boolean} update
    * @return {object}
    */
-  setAttribute(attributes) {
+  setAttribute(attributes, update = false) {
     this.instance.setAttribute(this.key, attributes);
+    if (update) {
+      let context = this.instance.getContext(this.key);
+      context.update();
+    }
     return this;
   }
 
@@ -61,10 +66,15 @@ export default class Bridge {
    * Return manipulador
    * 
    * @param {object} props
+   * @param {boolean} update
    * @return {object}
    */
-  setProps(props) {
+  setProps(props, update = false) {
     this.instance.setProps(this.key, props);
+    if (update) {
+      let context = this.instance.getContext(this.key);
+      context.update();
+    }
     return this;
   }
 
@@ -74,10 +84,15 @@ export default class Bridge {
    * Return manipulador
    * 
    * @param {object} value
+   * @param {boolean} update
    * @return {object}
    */
-  modifyAttribute(value) {
+  modifyAttribute(value, update = false) {
     this.instance.modifyAttribute(this.key, value);
+    if (update) {
+      let context = this.instance.getContext(this.key);
+      context.update();
+    }
     return this;
   }
 
@@ -87,10 +102,15 @@ export default class Bridge {
    * Return manipulador
    * 
    * @param {string} atrName
+   * @param {boolean} update
    * @return {object}
    */
-  removeAttribute(atrName) {
+  removeAttribute(atrName, update = false) {
     this.instance.removeAttribute(this.key, atrName);
+    if (update) {
+      let context = this.instance.getContext(this.key);
+      context.update();
+    }
     return this;
   }
 
@@ -104,10 +124,15 @@ export default class Bridge {
    * @param {object} children
    * @param {Number} index 
    * @param {boolean} mergeIndex
+   * @param {boolean} update
    * @return {object}
    */
-  setChildren(children, index = '', mergeIndex = false) {
+  setChildren(children, index = '', mergeIndex = false, update = false) {
     this.instance.setChildren(this.key, children, index, mergeIndex);
+    if (update) {
+      let context = this.instance.getContext(this.key);
+      context.update();
+    }
     return this;
   }
 
@@ -118,10 +143,15 @@ export default class Bridge {
    * Return manipulador
    * 
    * @param {Number} index
+   * @param {boolean} update
    * @return {object}
    */
   removeChildren(index) {
-    this.instance.removeChildren(this.key, index);
+    this.instance.removeChildren(this.key, index, update = false);
+    if (update) {
+      let context = this.instance.getContext(this.key);
+      context.update();
+    }
     return this;
   }
 

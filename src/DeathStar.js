@@ -90,7 +90,7 @@ export default class DeathStar {
    * @param {string} key
    */
   getContext(key) {
-    return this.getStore(key);
+    return this.getStore(key + "_context");
   }
 
   /**
@@ -227,9 +227,10 @@ export default class DeathStar {
    * @param {boolean} copy
    * @return {object}
    */
-  processElement(data, key, copy = false) {
+  processElement(data, key, copy = false, context) {
     let obj = this.setStore(key, data, copy);
     this.mapChildrens(obj.props.children, key);
+    this.setContext(key + "_context", context);
     return this.manipulate(key);
   }
 
