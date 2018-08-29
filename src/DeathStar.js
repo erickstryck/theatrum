@@ -7,6 +7,7 @@ var ninify = "";
 try {
   ninify = require('../../../death-star-minify.conf');
 } catch (e) {
+  console.error("You need to create a configuration file for the library, please read the documentation at https://github.com/erickstryck/react-deathStar/blob/master/README.md")
   ninify = { minify: false };
 }
 
