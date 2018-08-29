@@ -82,7 +82,7 @@ export default class DeathStar {
    * @param {object} value 
    */
   setContext(key, value) {
-    this.putStore(key, value, true);
+    this.putStore(key + "_context", value, true);
   }
 
   /**
@@ -231,7 +231,7 @@ export default class DeathStar {
   processElement(data, key, copy = false, context) {
     let obj = this.setStore(key, data, copy);
     this.mapChildrens(obj.props.children, key);
-    if(context){
+    if (context) {
       this.setContext(key + "_context", context);
     }
     return this.manipulate(key);
