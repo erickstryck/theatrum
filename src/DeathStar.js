@@ -231,7 +231,9 @@ export default class DeathStar {
   processElement(data, key, copy = false, context) {
     let obj = this.setStore(key, data, copy);
     this.mapChildrens(obj.props.children, key);
-    this.setContext(key + "_context", context);
+    if(context){
+      this.setContext(key + "_context", context);
+    }
     return this.manipulate(key);
   }
 
