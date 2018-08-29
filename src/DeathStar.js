@@ -232,7 +232,7 @@ export default class DeathStar {
     let obj = this.setStore(key, data, copy);
     this.mapChildrens(obj.props.children, key);
     if (context) {
-      this.setContext(key + "_context", context);
+      this.setContext(key, context);
     }
     return this.manipulate(key);
   }
