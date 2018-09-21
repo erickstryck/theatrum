@@ -226,15 +226,18 @@ export default class DeathStar {
    * @param {object} data 
    * @param {string} key 
    * @param {boolean} copy
+   * @param {object} context
+   * @param {boolean} manipulate
+   * 
    * @return {object}
    */
-  processElement(data, key, copy = false, context) {
+  processElement(data, key, copy = false, context, manipulate = false) {
     let obj = this.setStore(key, data, copy);
     this.mapChildrens(obj.props.children, key);
     if (context) {
       this.setContext(key, context);
     }
-    return this.manipulate(key);
+    return manipulate ? this.getElement(key, true) : this.manipulate(key);
   }
 
   /**
@@ -326,9 +329,10 @@ export default class DeathStar {
    * Recupera um elemento do repositório para renderização.
    * 
    * @param {string} key
+   * @param {string} internal
    * @return {object}
    */
-  getElement(key) {
+  getElement(key, internal = false) {
     key = this.minf(key);
     if (this.checkKey(key)) {
       let temp = this.getStore(key);
@@ -336,9 +340,29 @@ export default class DeathStar {
       let keyArr = key.split('-');
       if (this.checkKey(keyArr[0])) {
         let obj = this.getStore(keyArr[0]);
-        return (obj.key === keyMaster ? obj : this.walkChildren(obj.props.children, keyMaster)).key = this.getId();
+        if (internal) {
+          return (obj.key === keyMaster ? obj : this.walkChildren(obj.props.children, keyMaster));
+        } else {
+          let tempJSX = (obj.key === keyMaster ? obj : this.walkChildren(obj.props.children, keyMaster));
+          return this.updateKeyRender(tempJSX);
+        }
       }
     }
+  }
+
+  /**
+   * Atualiza a key do elemento para que possa acontecer o re-render quando o getElement for chamado várias vezes.
+   * 
+   * @param {object} tempJsx 
+   */
+  updateKeyRender(tempJsx) {
+    if (Object.keys(tempJsx.props).indexOf('ref') !== -1) {
+      tempJsx = Object.assign({}, tempJsx, { ref: tempJsx.props.ref });
+      delete props.ref;
+    }
+
+    tempJsx = this.updateAllKeyPropsReferencesToRender(tempJsx);
+    return Object.assign({}, tempJsx, { key: this.getId() });
   }
 
   /**
@@ -354,7 +378,7 @@ export default class DeathStar {
       return;
     }
     if (this.checkKey(key)) {
-      let tempJsx = this.getElement(key);
+      let tempJsx = this.getElement(key, true);
       if (Object.keys(props).indexOf('ref') !== -1) {
         tempJsx = Object.assign({}, tempJsx, { ref: props.ref });
         delete props.ref;
@@ -398,7 +422,7 @@ export default class DeathStar {
    * @return {object | undefined} 
    */
   copy(key, keyNew) {
-    return this.checkKey(key) ? this.processElement(this.getElement(key), keyNew, true) : '';
+    return this.checkKey(key) ? this.processElement(this.getElement(key, true), keyNew, true) : '';
   }
 
   /**
@@ -414,12 +438,12 @@ export default class DeathStar {
     }
     if (this.checkKey(key)) {
       if (attributes.ref) {
-        let tempJsx = this.getElement(key);
+        let tempJsx = this.getElement(key, true);
         let updated = Object.assign({}, tempJsx, attributes);
         this.updateAllReferences(updated);
       } else {
         if (this.checkProps(key)) {
-          let tempJsx = this.getElement(key);
+          let tempJsx = this.getElement(key, true);
           let updated = this.swapPropsAttr(tempJsx, attributes);
           this.updateAllReferences(updated);
         }
@@ -454,7 +478,7 @@ export default class DeathStar {
     if (this.checkKey(key)) {
       if (this.checkProps(key)) {
         if (this.checkAttribute(key, atrName) || atrName === 'ref') {
-          let tempJsx = this.getElement(key);
+          let tempJsx = this.getElement(key, true);
           if (atrName === 'ref') {
             let updated = Object.assign({}, tempJsx, { ref: value });
             this.updateAllReferences(updated);
@@ -498,7 +522,7 @@ export default class DeathStar {
     }
     if (this.checkKey(key)) {
       if (this.checkProps(key)) {
-        let tempJsx = this.getElement(key);
+        let tempJsx = this.getElement(key, true);
         if (atrName === 'ref') {
           let updated = Object.assign({}, tempJsx, { ref: null });
           this.updateAllReferences(updated);
@@ -533,7 +557,7 @@ export default class DeathStar {
       return;
     }
     if (this.checkKey(key)) {
-      let tempJsx = this.getElement(key);
+      let tempJsx = this.getElement(key, true);
       if (this.checkProps(key)) {
         if (tempJsx.props.children) {
           if (childrenVal instanceof Array) {
@@ -597,7 +621,7 @@ export default class DeathStar {
       return;
     }
     if (this.checkKey(key)) {
-      let jsxMaster = this.getElement(key);
+      let jsxMaster = this.getElement(key, true);
       if (jsxMaster.props.children instanceof Array) {
         let newArr = jsxMaster.props.children.filter((current, idx) => index !== idx);
         let updated = this.swapPropsAttr(jsxMaster, { children: newArr });
@@ -620,7 +644,7 @@ export default class DeathStar {
       return;
     }
     if (this.checkKey(key)) {
-      let jsxMaster = this.getElement(key);
+      let jsxMaster = this.getElement(key, true);
       let updated = this.swapPropsAttr(jsxMaster, { children: null });
       this.updateAllReferences(updated);
     } else console.log('Chave não encontrada!');
@@ -639,10 +663,36 @@ export default class DeathStar {
       if (tempElement.props) {
         if (tempElement.key !== obj.key) {
           let childrenUpdated = this.checkChildrensInArray(obj, tempElement);
-          this.putStore(current, this.processElement(this.swapPropsAttr(tempElement, { children: childrenUpdated }), current).getElement());
-        } else this.putStore(current, this.processElement(obj, current).getElement());
+          this.putStore(current, this.processElement(this.swapPropsAttr(tempElement, { children: childrenUpdated }), current, false, '', true));
+        } else this.putStore(current, this.processElement(obj, current, false, '', true));
       }
     }, this);
+  }
+
+  /**
+   * Realiza a atualização das keys nos props dos componente e seus filhos.
+   * 
+   * @param {object} elementJSX
+   * 
+   * @return {object} 
+   */
+  updateAllKeyPropsReferencesToRender(elementJSX) {
+    elementJSX = this.swapPropsAttr(elementJSX, { key: this.getId() });
+    elementJSX = Object.assign({}, elementJSX, { key: this.getId() });
+
+    if (elementJSX.props.children instanceof Array) {
+      elementJSX.props.children.forEach(child => {
+        child = this.swapPropsAttr(child, { key: this.getId() });
+        child = Object.assign({}, child, { key: this.getId() });
+        if (child.props.children) {
+          this.updateAllKeyPropsReferencesToRender(child);
+        }
+      });
+    } else if(elementJSX.props.children){
+      this.updateAllKeyPropsReferencesToRender(elementJSX.props.children);
+    }
+
+    return elementJSX;
   }
 
   /**
@@ -719,7 +769,7 @@ export default class DeathStar {
    * @return {boolean} 
    */
   checkProps(key) {
-    return this.checkKey(key) ? Object.keys(this.getElement(key)).indexOf('props') === -1 ? false : true : false;
+    return this.checkKey(key) ? Object.keys(this.getElement(key, true)).indexOf('props') === -1 ? false : true : false;
   }
 
   /**
@@ -730,7 +780,7 @@ export default class DeathStar {
    * @return {boolean} 
    */
   checkAttribute(key, atrName) {
-    return this.checkKey(key) ? this.checkProps(key) ? Object.keys(this.getElement(key).props).indexOf(atrName) === -1 ? false : true : false : false;
+    return this.checkKey(key) ? this.checkProps(key) ? Object.keys(this.getElement(key, true).props).indexOf(atrName) === -1 ? false : true : false : false;
   }
 
 }
