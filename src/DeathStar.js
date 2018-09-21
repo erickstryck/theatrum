@@ -336,7 +336,7 @@ export default class DeathStar {
       let keyArr = key.split('-');
       if (this.checkKey(keyArr[0])) {
         let obj = this.getStore(keyArr[0]);
-        return obj.key === keyMaster ? obj : this.walkChildren(obj.props.children, keyMaster);
+        return (obj.key === keyMaster ? obj : this.walkChildren(obj.props.children, keyMaster)).key = this.getId();
       }
     }
   }
