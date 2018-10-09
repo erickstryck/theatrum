@@ -146,8 +146,8 @@ export default class Bridge {
    * @param {boolean} update
    * @return {object}
    */
-  removeChildren(index) {
-    this.instance.removeChildren(this.key, index, update = false);
+  removeChildren(index, update = false) {
+    this.instance.removeChildren(this.key, index);
     if (update) {
       let context = this.instance.getContext(this.key);
       context.update();

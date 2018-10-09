@@ -4,6 +4,7 @@
   "description": "Create, Manipulate and Destroy React Elements easily",
   "main": "./lib/index",
   "scripts": {
+    "release" : "release-it",
     "prebuild": "rimraf lib && babel src -d lib",
     "build": "webpack --config webpack.config.js"
   },
@@ -22,6 +23,7 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-1": "^6.24.1",
     "eslint": "^4.7.2",
+    "release-it": "^7.6.1",
     "rimraf": "^2.6.2",
     "webpack": "^3.6.0"
   }
