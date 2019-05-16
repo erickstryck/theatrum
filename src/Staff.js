@@ -1,5 +1,3 @@
-import Bridge from './Bridge';
-
 /**
  * Responsável por importar o arquivo de configuração da minificação
  */
@@ -24,7 +22,7 @@ export default class Storage {
    */
   constructor(react) {
     this.storage = {};
-    this.createElement = react.createElement;
+    this.react = react;
     this.getStore.bind(this);
     this.putStore.bind(this);
     this.deleteStore.bind(this);
@@ -48,6 +46,18 @@ export default class Storage {
       return instance;
     }
   }
+
+  /**
+   * Recupera a instância do react
+   */
+  static getReact(){
+    let react = (Storage.getInstance()).react
+    if(Object.keys(react).length){
+      return react
+    }else{
+      throw "Você necessita iniciar a store com o react corrente"
+    }
+ }
 
   /**
    * Apaga todos os dados do storage de elementos
@@ -136,6 +146,12 @@ export default class Storage {
   }
 }
 
+const stage = {}
+
+const scene = {}
+
+const actor = {}
+
 const engine = {
   /**
    * Recria o componente informado com seu devido mapeamento para manipulação.
@@ -149,7 +165,7 @@ const engine = {
     if (children && children.length === 0) children = null;
     props = props.children ? Object.assign({}, props, { children: null }) : props;
     props = (Object.keys(props).indexOf('key') !== -1) ? Object.assign({}, props, { key: props.key }) : Object.assign({}, props, { key: this.getId() });
-    return this.createElement(type, props, children);
+    return Storage.getReact().createElement(type, props, children);
   },
 
   /**
@@ -157,6 +173,15 @@ const engine = {
    */
   clearBus(){
     Storage.clearStorage()
+  },
+
+  /**
+   * Injeta uma instancia do react e inicia o storage
+   * 
+   * @param {*} react 
+   */
+  injectReact(react){
+    Store.getInstance(react)
   },
 
   /**
@@ -818,4 +843,9 @@ const engine = {
 
 }
 
-export default engine
+export default {
+  Staff : engine,
+  Stage : stage,
+  Scene : scene,
+  Actor : actor,
+}
