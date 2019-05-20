@@ -1,99 +1,87 @@
+import React from 'react'
+import createReactClass from 'create-react-class'
+
 /**
  * Responsável por importar o arquivo de configuração da minificação
  */
-var minify = "";
+var minify = ''
 try {
-  minify = require('../../../death-star-minify.conf');
+  minify = require('../../../death-star-minify.conf')
 } catch (e) {
-  console.error("You need to create a configuration file for the library, please read the documentation at https://github.com/erickstryck/react-deathStar/blob/master/README.md")
-  minify = { minify: false };
+  console.error(
+    'You need to create a configuration file for the library, please read the documentation at https://github.com/erickstryck/react-deathStar/blob/master/README.md'
+  )
+  minify = { minify: false }
 }
 
 minify = minify.minify
-let instance = '';
+let instance = ''
 
-
-export default class Storage {
+class Storage {
   /**
    * Classe responsável por prover as funções da biblioteca.
    * @constructor
-   * 
-   * @param {object} react 
+   *
    */
-  constructor(react) {
-    this.storage = {};
-    this.react = react;
-    this.getStore.bind(this);
-    this.putStore.bind(this);
-    this.deleteStore.bind(this);
-    this.getKeys.bind(this);
-    this.getHtmlDict.bind(this);
-    this.setHtmlDict.bind(this);
-    this.htmlDict = [];
+  constructor() {
+    this.storage = {}
+    this.getStore.bind(this)
+    this.putStore.bind(this)
+    this.deleteStore.bind(this)
+    this.getKeys.bind(this)
+    this.getHtmlDict.bind(this)
+    this.setHtmlDict.bind(this)
+    this.htmlDict = []
   }
 
   /**
-   * Recupera a instância corrente do React pelo componente que o utilizará.
-   * 
-   * @param {object} react
+   * Inicia o storage
+   *
    * @return {object}
    */
-  static getInstance(react) {
+  static getInstance() {
     if (instance) {
-      return instance;
+      return instance
     } else {
-      instance = new Storage(react);
-      return instance;
+      instance = new Storage()
+      return instance
     }
   }
-
-  /**
-   * Recupera a instância do react
-   */
-  static getReact(){
-    let react = (Storage.getInstance()).react
-    if(Object.keys(react).length){
-      return react
-    }else{
-      throw "Você necessita iniciar a store com o react corrente"
-    }
- }
 
   /**
    * Apaga todos os dados do storage de elementos
    */
-  static clearStorage(){
-     (Storage.getInstance()).storage = {}
+  static clearStorage() {
+    Storage.getInstance().storage = {}
   }
-
 
   /**
    * Adiciona um item avulso no storage
    */
-  static setItemStorage(key, value){
-    (Storage.getInstance()).storage[key] = value
- }
+  static setItemStorage(key, value) {
+    Storage.getInstance().storage[key] = value
+  }
 
   /**
    * Recupera o dicionario html para o minify
    */
-  static getHtmlDict(){
-    return (Storage.getInstance()).htmlDict
+  static getHtmlDict() {
+    return Storage.getInstance().htmlDict
   }
 
   /**
    * Seta um novo valor no dicionario html minify
    */
-  static setHtmlDict(value){
-    (Storage.getInstance()).htmlDict.push(value);
+  static setHtmlDict(value) {
+    Storage.getInstance().htmlDict.push(value)
   }
 
   /**
-   * Persiste os dados informados no repositório local. 
+   * Persiste os dados informados no repositório local.
    * Poderá persistir o contexto do componente e recuperar o mesmo posteriormente.
-   * 
-   * @param {string} key 
-   * @param {object} value 
+   *
+   * @param {string} key
+   * @param {object} value
    * @param {boolean} context
    * @return {object | undefined}
    */
@@ -101,52 +89,65 @@ export default class Storage {
     if (context) {
       value['update'] = () => {
         value.setState({
-          deathStartUpdater: value.deathStartUpdater ? true : false
-        });
-      };
-      let temp = {};
-      Object.keys(value).map((current) => {
-        if (typeof (value[current]) === 'function') {
-          temp[current] = value[current];
+          deathStartUpdater: value.deathStartUpdater ? true : false,
+        })
+      }
+      let temp = {}
+      Object.keys(value).map(current => {
+        if (typeof value[current] === 'function') {
+          temp[current] = value[current]
         }
-      });
-      temp['state'] = value.state;
-      (Storage.getInstance()).storage[key] = temp;
+      })
+      temp['state'] = value.state
+      Storage.getInstance().storage[key] = temp
     } else {
-      (Storage.getInstance()).storage[key] = value;
-      return value;
+      Storage.getInstance().storage[key] = value
+      return value
     }
   }
 
   /**
    * Recupera o dado do repositório por meio da 'Key' informada.
-   * 
+   *
    * @param {string} key
    * @return {object}
    */
   static getStore(key) {
-    return (Storage.getInstance()).storage[key];
+    return Storage.getInstance().storage[key]
   }
 
   /**
    * Remove o objeto do repositório por meio da 'Key' informada.
-   * 
-   * @param {string} key 
+   *
+   * @param {string} key
    */
   static deleteStore(key) {
-    delete (Storage.getInstance()).storage[key];
+    delete Storage.getInstance().storage[key]
   }
 
-    /**
+  /**
    * Recupera todas as chaves realcionadas aos objetos persistidos no repositório.
    * @return {array}
    */
   static getKeys() {
-    return Object.keys((Storage.getInstance()).storage);
+    return Object.keys(Storage.getInstance().storage)
   }
 }
 
-const stage = {}
+const injectMixin = {}
+
+const stage = props => {
+  debugger
+  let child = React.createElement('span', props, 'teste')
+  debugger
+  return createReactClass({
+    mixins: [injectMixin],
+
+    render() {
+      return React.createElement('span', props, 'teste')
+    },
+  })()
+}
 
 const scene = {}
 
@@ -155,60 +156,65 @@ const actor = {}
 const engine = {
   /**
    * Recria o componente informado com seu devido mapeamento para manipulação.
-   * 
-   * @param {string | object} type 
-   * @param {object} props 
+   *
+   * @param {string | object} type
+   * @param {object} props
    * @param {object} children
    * @return {object}
    */
-  builder(type, props, children){
-    if (children && children.length === 0) children = null;
-    props = props.children ? Object.assign({}, props, { children: null }) : props;
-    props = (Object.keys(props).indexOf('key') !== -1) ? Object.assign({}, props, { key: props.key }) : Object.assign({}, props, { key: this.getId() });
-    return Storage.getReact().createElement(type, props, children);
+  builder(type, props, children) {
+    if (children && children.length === 0) children = null
+    props = props.children
+      ? Object.assign({}, props, { children: null })
+      : props
+    props =
+      Object.keys(props).indexOf('key') !== -1
+        ? Object.assign({}, props, { key: props.key })
+        : Object.assign({}, props, { key: this.getId() })
+    return React.createElement(type, props, children)
   },
 
   /**
    * Limpa o repositório local de informações
    */
-  clearBus(){
+  clearBus() {
     Storage.clearStorage()
   },
 
   /**
    * Injeta uma instancia do react e inicia o storage
-   * 
-   * @param {*} react 
+   *
+   * @param {*} react
    */
-  injectReact(react){
+  injectReact(react) {
     Store.getInstance(react)
   },
 
   /**
    * Insere o contexto do elemento para manipulação remota por outro componente.
-   * 
-   * @param {string} key 
-   * @param {object} value 
+   *
+   * @param {string} key
+   * @param {object} value
    */
-  setContext(key, value){
-    Storage.putStore(key + "_context", value, true)
+  setContext(key, value) {
+    Storage.putStore(key + '_context', value, true)
   },
 
   /**
    * Recupera o contexto do elemento para manipulação remota por outro componente.
-   * 
+   *
    * @param {string} key
    */
-  getContext(key){
-    return Storage.getStore(key + "_context");
+  getContext(key) {
+    return Storage.getStore(key + '_context')
   },
 
   /**
-   * Persiste os dados informados no repositório local. 
+   * Persiste os dados informados no repositório local.
    * Poderá persistir o contexto do componente e recuperar o mesmo posteriormente.
-   * 
-   * @param {string} key 
-   * @param {object} value 
+   *
+   * @param {string} key
+   * @param {object} value
    * @param {boolean} context
    * @return {object | undefined}
    */
@@ -216,26 +222,26 @@ const engine = {
     if (context) {
       value['update'] = () => {
         value.setState({
-          deathStartUpdater: value.deathStartUpdater ? true : false
-        });
-      };
-      let temp = {};
-      Object.keys(value).map((current) => {
-        if (typeof (value[current]) === 'function') {
-          temp[current] = value[current];
+          deathStartUpdater: value.deathStartUpdater ? true : false,
+        })
+      }
+      let temp = {}
+      Object.keys(value).map(current => {
+        if (typeof value[current] === 'function') {
+          temp[current] = value[current]
         }
-      });
-      temp['state'] = value.state;
+      })
+      temp['state'] = value.state
       Storage.setItemStorage(key, temp)
     } else {
       Storage.setItemStorage(key, value)
-      return value;
+      return value
     }
   },
 
   /**
    * Recupera o dado do repositório por meio da 'Key' informada.
-   * 
+   *
    * @param {string} key
    * @return {object}
    */
@@ -245,8 +251,8 @@ const engine = {
 
   /**
    * Remove o objeto do repositório por meio da 'Key' informada.
-   * 
-   * @param {string} key 
+   *
+   * @param {string} key
    */
   deleteStore(key) {
     Storage.deleteStore(key)
@@ -262,123 +268,164 @@ const engine = {
 
   /**
    * Destrói os elementos React do repositório por meio da lista de Arrays informados.
-   * 
-   * @param {array | string} keys 
+   *
+   * @param {array | string} keys
    */
   destroy(keys) {
-    let store = engine.keys();
+    let store = engine.keys()
     if (keys instanceof Array) {
-      keys.map((currentItem) => {
-        store.map((currentStore) => {
+      keys.map(currentItem => {
+        store.map(currentStore => {
           if (currentStore.split('-')[0] === currentItem) {
             Storage.deleteStore(currentItem)
           }
-        });
-      });
+        })
+      })
     } else {
-      store.map((currentStore) => {
+      store.map(currentStore => {
         if (currentStore.split('-')[0] === keys) {
           Storage.deleteStore(currentStore)
         }
-      });
+      })
     }
   },
 
   /**
    * Realiza a minificação dos tipos de objetos React fazendo a compressão de nomes dos componentes.
-   * 
+   *
    * @param {string} key
    * @return {string}
    */
   minf(key) {
     if (minify) {
-      key.match(/(-\w[a-zA-Z]+)/g) ? key.match(/(-\w[a-zA-Z]+)/g).map((current) => {
-        if (Storage.getHtmlDict().indexOf(current.substring(1, key.length)) === -1) {
-          key = key.replace(current.substring(1, key.length), "t")
-        }
-      }) : ""
+      key.match(/(-\w[a-zA-Z]+)/g)
+        ? key.match(/(-\w[a-zA-Z]+)/g).map(current => {
+            if (
+              Storage.getHtmlDict().indexOf(
+                current.substring(1, key.length)
+              ) === -1
+            ) {
+              key = key.replace(current.substring(1, key.length), 't')
+            }
+          })
+        : ''
     }
     return key
   },
 
   /**
    * Prepara um container de informações para serem criadas e indexadas.
-   * 
-   * @param {object} data 
+   *
+   * @param {object} data
    * @param {boolean} copy
    * @return {object}
    */
   container(data, copy = false) {
-    let newProps = data.props;
-    if (Object.keys(data).indexOf('key') !== -1 && data['key'] && !copy) newProps = Object.assign({}, newProps, { key: data.key });
-    if (Object.keys(data).indexOf('ref') !== -1 && data['ref']) newProps = Object.assign({}, newProps, { ref: data.ref });
-    return engine.builder(data.type, newProps ? newProps : null, Object.keys(data.props).indexOf('children') !== -1 ? engine.processChildren(data.props.children, copy) : []);
+    let newProps = data.props
+    if (Object.keys(data).indexOf('key') !== -1 && data['key'] && !copy)
+      newProps = Object.assign({}, newProps, { key: data.key })
+    if (Object.keys(data).indexOf('ref') !== -1 && data['ref'])
+      newProps = Object.assign({}, newProps, { ref: data.ref })
+    return engine.builder(
+      data.type,
+      newProps ? newProps : null,
+      Object.keys(data.props).indexOf('children') !== -1
+        ? engine.processChildren(data.props.children, copy)
+        : []
+    )
   },
 
   /**
    * Processa os filhos de um elemento React para que possam ser mapeados para manipulação.
-   * 
-   * @param {object | array} children 
+   *
+   * @param {object | array} children
    * @param {boolean} copy
    * @return {object}
    */
   processChildren(children, copy) {
-    return children ? children instanceof Array ? children.length > 0 ? children.map(function (arrChild) {
-      if (arrChild) return arrChild.type ? engine.container(arrChild, copy) : arrChild;
-    }) : null : children.type ? engine.container(children, copy) : children : null;
+    return children
+      ? children instanceof Array
+        ? children.length > 0
+          ? children.map(function(arrChild) {
+              if (arrChild)
+                return arrChild.type
+                  ? engine.container(arrChild, copy)
+                  : arrChild
+            })
+          : null
+        : children.type
+        ? engine.container(children, copy)
+        : children
+      : null
   },
 
   /**
    * Processa um elemento React para que possam ser mapeado para manipulação.
-   * 
-   * @param {object} data 
-   * @param {string} key 
+   *
+   * @param {object} data
+   * @param {string} key
    * @param {boolean} copy
    * @return {object}
    */
   processElement(data, key, copy = false, context) {
-    let obj = engine.setStore(key, data, copy);
-    engine.mapChildrens(obj.props.children, key);
+    let obj = engine.setStore(key, data, copy)
+    engine.mapChildrens(obj.props.children, key)
     if (context) {
-      engine.setContext(key, context);
+      engine.setContext(key, context)
     }
-    return engine.manipulate(key);
+    //return engine.manipulate(key);
   },
 
   /**
    * Mapeia os filhos processados de um elemento para indexação no repositório.
-   * 
-   * @param {object} data 
-   * @param {string} key 
+   *
+   * @param {object} data
+   * @param {string} key
    */
   mapChildrens(data, key) {
     if (data) {
       if (data instanceof Array) {
-        data.map(function (current, index) {
+        data.map(function(current, index) {
           if (current) {
-            ++index;
-            if (current.props) engine.mapChildrens(current.props.children, key + '-' + engine.haveTypeName(current.type) + index);
-            if (current.props) engine.putStore(key + '-' + engine.haveTypeName(current.type) + index, current.key);
+            ++index
+            if (current.props)
+              engine.mapChildrens(
+                current.props.children,
+                key + '-' + engine.haveTypeName(current.type) + index
+              )
+            if (current.props)
+              engine.putStore(
+                key + '-' + engine.haveTypeName(current.type) + index,
+                current.key
+              )
           }
-        });
+        })
       } else {
-        if (data.props) engine.mapChildrens(data.props.children, key + '-' + engine.haveTypeName(data.type) + '1');
-        if (data.props) engine.putStore(key + '-' + engine.haveTypeName(data.type) + '1', data.key);
+        if (data.props)
+          engine.mapChildrens(
+            data.props.children,
+            key + '-' + engine.haveTypeName(data.type) + '1'
+          )
+        if (data.props)
+          engine.putStore(
+            key + '-' + engine.haveTypeName(data.type) + '1',
+            data.key
+          )
       }
     }
   },
 
   /**
    * Verifica se o tipo do componente já foi inserido no dicionário de tipos, caso não exista ele o insere.
-   * 
+   *
    * @param {string} type
    * @return {string}
    */
   haveTypeName(type) {
     if (minify && typeof type === 'string') {
-      if (Storage.getHtmlDict().indexOf(type) === -1) Storage.setHtmlDict(type);
+      if (Storage.getHtmlDict().indexOf(type) === -1) Storage.setHtmlDict(type)
     }
-    return type.displayName ? type.displayName : type.name ? type.name : type;
+    return type.displayName ? type.displayName : type.name ? type.name : type
   },
 
   /**
@@ -389,147 +436,169 @@ const engine = {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
         .toString(16)
-        .substring(1);
+        .substring(1)
     }
-    return s4() + s4() + '_' + s4() + '_' + s4() + '_' +
-      s4() + '_' + s4() + s4() + s4();
+    return (
+      s4() +
+      s4() +
+      '_' +
+      s4() +
+      '_' +
+      s4() +
+      '_' +
+      s4() +
+      '_' +
+      s4() +
+      s4() +
+      s4()
+    )
   },
 
   /**
    * Insere no repositório um elemento react novo
-   * 
-   * @param {string} key 
-   * @param {object} jsxData 
+   *
+   * @param {string} key
+   * @param {object} jsxData
    * @param {boolean} copy
    * @return {object}
    */
   setStore(key, jsxData, copy = false) {
-    return engine.putStore(key, engine.container(jsxData, copy));
+    return engine.putStore(key, engine.container(jsxData, copy))
   },
 
-  /**
-   * Recupera um elemento React do repositório e o disponibiliza para manipulação.
-   * 
-   * @param {string} key
-   * @return {object}
-   */
-  manipulate(key) {
-    key = engine.minf(key);
-    return engine.checkKey(key) ? new Bridge(key) : '';
-  },
+  // /**
+  //  * Recupera um elemento React do repositório e o disponibiliza para manipulação.
+  //  *
+  //  * @param {string} key
+  //  * @return {object}
+  //  */
+  // manipulate(key) {
+  //   key = engine.minf(key);
+  //   return engine.checkKey(key) ? new Bridge(key) : '';
+  // },
 
-  /**
-   * Recupera um elemento React do repositório cria uma cópia com a nova chave e o disponibiliza para manipulação.
-   * 
-   * @param {string} key 
-   * @param {string} newKey
-   * @return {object}
-   */
-  manipulateCopy(key, newKey) {
-    key = engine.minf(key);
-    return engine.manipulate(key).copy(newKey);
-  },
+  // /**
+  //  * Recupera um elemento React do repositório cria uma cópia com a nova chave e o disponibiliza para manipulação.
+  //  *
+  //  * @param {string} key
+  //  * @param {string} newKey
+  //  * @return {object}
+  //  */
+  // manipulateCopy(key, newKey) {
+  //   key = engine.minf(key);
+  //   return engine.manipulate(key).copy(newKey);
+  // },
 
   /**
    * Recupera um elemento do repositório para renderização.
-   * 
+   *
    * @param {string} key
    * @return {object}
    */
   getElement(key) {
-    key = engine.minf(key);
+    key = engine.minf(key)
     if (engine.checkKey(key)) {
-      let temp = engine.getStore(key);
-      let keyMaster = temp.props ? temp.key : temp;
-      let keyArr = key.split('-');
+      let temp = engine.getStore(key)
+      let keyMaster = temp.props ? temp.key : temp
+      let keyArr = key.split('-')
       if (engine.checkKey(keyArr[0])) {
-        let obj = engine.getStore(keyArr[0]);
-        return obj.key === keyMaster ? obj : engine.walkChildren(obj.props.children, keyMaster);
+        let obj = engine.getStore(keyArr[0])
+        return obj.key === keyMaster
+          ? obj
+          : engine.walkChildren(obj.props.children, keyMaster)
       }
     }
   },
 
   /**
    * Insere o novo objeto de propriedades ao elemento substituindo as antigas propriedades, o elemento será encontrado pela chave informada.
-   * 
-   * @param {string} key 
-   * @param {object} props 
+   *
+   * @param {string} key
+   * @param {object} props
    */
   setProps(key, props) {
-
     if (!key && !(props instanceof Object)) {
-      console.log('metodo: setProps - Você precisa especificar uma key em string e um props no formato objeto!');
-      return;
+      console.log(
+        'metodo: setProps - Você precisa especificar uma key em string e um props no formato objeto!'
+      )
+      return
     }
     if (engine.checkKey(key)) {
-      let tempJsx = engine.getElement(key);
+      let tempJsx = engine.getElement(key)
       if (Object.keys(props).indexOf('ref') !== -1) {
-        tempJsx = Object.assign({}, tempJsx, { ref: props.ref });
-        delete props.ref;
+        tempJsx = Object.assign({}, tempJsx, { ref: props.ref })
+        delete props.ref
       }
-      tempJsx = engine.swapPropsAttr(tempJsx, props);
-      engine.updateAllReferences(tempJsx);
+      tempJsx = engine.swapPropsAttr(tempJsx, props)
+      engine.updateAllReferences(tempJsx)
     }
   },
 
   /**
    * Retorna todos os filhos de um elemento recursivamente.
-   * 
-   * @param {object} data 
+   *
+   * @param {object} data
    * @param {string} key
    * @return {array}
    */
   walkChildren(data, key) {
-    let walk = '';
+    let walk = ''
     if (data) {
       if (data instanceof Array) {
         for (let x = 0; x < data.length; x++) {
           if (data[x]) {
-            if (data[x].key === key) return data[x];
-            else if (data[x].props) walk = engine.walkChildren(data[x].props.children, key);
-            if (walk && walk.key === key) return walk;
+            if (data[x].key === key) return data[x]
+            else if (data[x].props)
+              walk = engine.walkChildren(data[x].props.children, key)
+            if (walk && walk.key === key) return walk
           }
         }
       } else {
-        if (data.key === key) return data;
-        else if (data.props) walk = engine.walkChildren(data.props.children, key);
-        if (walk && walk.key === key) return walk;
+        if (data.key === key) return data
+        else if (data.props)
+          walk = engine.walkChildren(data.props.children, key)
+        if (walk && walk.key === key) return walk
       }
-    } return;
+    }
+    return
   },
 
   /**
    * Recupera o elemento por meio de sua chave e realiza uma cópia aplicando a ela uma nova chave.
-   * 
-   * @param {string} key 
+   *
+   * @param {string} key
    * @param {string} keyNew
-   * @return {object | undefined} 
+   * @return {object | undefined}
    */
   copy(key, keyNew) {
-    return engine.checkKey(key) ? engine.processElement(engine.getElement(key), keyNew, true) : '';
+    return engine.checkKey(key)
+      ? engine.processElement(engine.getElement(key), keyNew, true)
+      : ''
   },
 
   /**
    * Insere um novo atributo no objeto relacionado a chave informada.
-   * 
-   * @param {string} key 
-   * @param {object} attributes 
+   *
+   * @param {string} key
+   * @param {object} attributes
    */
   setAttribute(key, attributes) {
-    if (!key && !attributes || !(attributes instanceof Object)) {
-      console.log('metodo: setAttributes - Você precisa especificar uma key em string e um atributo no formato objeto!');
-      return;
+    if ((!key && !attributes) || !(attributes instanceof Object)) {
+      console.log(
+        'metodo: setAttributes - Você precisa especificar uma key em string e um atributo no formato objeto!'
+      )
+      return
     }
     if (engine.checkKey(key)) {
       if (attributes.ref) {
-        let tempJsx = engine.getElement(key);
-        let updated = Object.assign({}, tempJsx, attributes);
-        engine.updateAllReferences(updated);
+        let tempJsx = engine.getElement(key)
+        let updated = Object.assign({}, tempJsx, attributes)
+        engine.updateAllReferences(updated)
       } else {
         if (engine.checkProps(key)) {
-          let tempJsx = engine.getElement(key);
-          let updated = engine.swapPropsAttr(tempJsx, attributes);
-          engine.updateAllReferences(updated);
+          let tempJsx = engine.getElement(key)
+          let updated = engine.swapPropsAttr(tempJsx, attributes)
+          engine.updateAllReferences(updated)
         }
       }
     }
@@ -537,40 +606,42 @@ const engine = {
 
   /**
    * Reaplica um novo valor ao atributo passado ao objeto por meio da chave informada.
-   * 
-   * @param {string} key 
-   * @param {object} attValues 
+   *
+   * @param {string} key
+   * @param {object} attValues
    */
   modifyAttribute(key, attValues) {
-    Object.keys(attValues).map((current) => {
-      engine.processModify(key, current, attValues[current]);
-    });
+    Object.keys(attValues).map(current => {
+      engine.processModify(key, current, attValues[current])
+    })
   },
 
   /**
    * Aplica as mudanças nos atributos de acordo com os valores informados.
-   * 
-   * @param {string} key 
-   * @param {string} atrName 
-   * @param {object} value 
+   *
+   * @param {string} key
+   * @param {string} atrName
+   * @param {object} value
    */
   processModify(key, atrName, value) {
     if (!key && !atrName && !value) {
-      console.log('metodo: modifyAttribute - Você precisa especificar a key, o nome do atributo e seu valor por parâmetro!');
-      return;
+      console.log(
+        'metodo: modifyAttribute - Você precisa especificar a key, o nome do atributo e seu valor por parâmetro!'
+      )
+      return
     }
     if (engine.checkKey(key)) {
       if (engine.checkProps(key)) {
         if (engine.checkAttribute(key, atrName) || atrName === 'ref') {
-          let tempJsx = engine.getElement(key);
+          let tempJsx = engine.getElement(key)
           if (atrName === 'ref') {
-            let updated = Object.assign({}, tempJsx, { ref: value });
-            engine.updateAllReferences(updated);
+            let updated = Object.assign({}, tempJsx, { ref: value })
+            engine.updateAllReferences(updated)
           } else {
-            let tempVar = {};
-            tempVar[atrName] = value;
-            let updated = engine.swapPropsAttr(tempJsx, tempVar);
-            engine.updateAllReferences(updated);
+            let tempVar = {}
+            tempVar[atrName] = value
+            let updated = engine.swapPropsAttr(tempJsx, tempVar)
+            engine.updateAllReferences(updated)
           }
         }
       }
@@ -579,97 +650,107 @@ const engine = {
 
   /**
    * Recupera o elemento do repositório e realiza a remoção dos atributos informados.
-   * 
-   * @param {string} key 
-   * @param {array | string} attValues 
+   *
+   * @param {string} key
+   * @param {array | string} attValues
    */
   removeAttribute(key, attValues) {
     if (attValues instanceof Array) {
-      attValues.map((current) => {
-        engine.processRemove(key, current);
-      });
+      attValues.map(current => {
+        engine.processRemove(key, current)
+      })
     } else {
-      engine.processRemove(key, attValues);
+      engine.processRemove(key, attValues)
     }
   },
 
   /**
    * Aplica a remoção dos atributos de acordo com os valores informados.
-   * 
-   * @param {string} key 
-   * @param {string} atrName 
+   *
+   * @param {string} key
+   * @param {string} atrName
    */
   processRemove(key, atrName) {
     if (!key && !atrName) {
-      console.log('metodo: removeAttribute - Você precisa especificar uma key em string e o nome do atributo a ser removido!');
-      return;
+      console.log(
+        'metodo: removeAttribute - Você precisa especificar uma key em string e o nome do atributo a ser removido!'
+      )
+      return
     }
     if (engine.checkKey(key)) {
       if (engine.checkProps(key)) {
-        let tempJsx = engine.getElement(key);
+        let tempJsx = engine.getElement(key)
         if (atrName === 'ref') {
-          let updated = Object.assign({}, tempJsx, { ref: null });
-          engine.updateAllReferences(updated);
+          let updated = Object.assign({}, tempJsx, { ref: null })
+          engine.updateAllReferences(updated)
         }
         if (engine.checkAttribute(key, atrName)) {
-          let index = Object.keys(tempJsx.props);
-          index.splice(index.indexOf(atrName), 1);
-          let tempObj = {};
-          index.map((current) => {
-            tempObj[current] = tempJsx.props[current];
-          });
-          let result = Object.assign({}, tempJsx, { props: tempObj });
-          engine.updateAllReferences(result);
+          let index = Object.keys(tempJsx.props)
+          index.splice(index.indexOf(atrName), 1)
+          let tempObj = {}
+          index.map(current => {
+            tempObj[current] = tempJsx.props[current]
+          })
+          let result = Object.assign({}, tempJsx, { props: tempObj })
+          engine.updateAllReferences(result)
         }
       }
     }
   },
 
   /**
-   * Realiza a inserção de um elemento filho em um outro elemento especificado pela chave, 
+   * Realiza a inserção de um elemento filho em um outro elemento especificado pela chave,
    * poderá ser informado o índice onde será inserido o objeto, caso a flag "mergeIndex" for informada o conteúdo será mergeado na fila sem nenhuma
    * remoção dos itens existentes. A fila de elementos será empurrada para acomodar o novo elemento no indice informado.
-   * 
-   * @param {string} key 
-   * @param {object} childrenVal 
-   * @param {Number} index 
-   * @param {boolean} mergeIndex 
+   *
+   * @param {string} key
+   * @param {object} childrenVal
+   * @param {Number} index
+   * @param {boolean} mergeIndex
    */
   setChildren(key, childrenVal, index = '', mergeIndex = false) {
     if (!key && !childrenVal) {
-      console.log('metodo: setChildren - Você precisa especificar a key e um elemento a ser inserido!');
-      return;
+      console.log(
+        'metodo: setChildren - Você precisa especificar a key e um elemento a ser inserido!'
+      )
+      return
     }
     if (engine.checkKey(key)) {
-      let tempJsx = engine.getElement(key);
+      let tempJsx = engine.getElement(key)
       if (engine.checkProps(key)) {
         if (tempJsx.props.children) {
           if (childrenVal instanceof Array) {
-            let arrChild = tempJsx.props.children;
-            if (!(arrChild instanceof Array)) arrChild = new Array(arrChild);
-            let updated = {};
+            let arrChild = tempJsx.props.children
+            if (!(arrChild instanceof Array)) arrChild = new Array(arrChild)
+            let updated = {}
             if (index) {
-              index--;
-              if (mergeIndex) arrChild.splice(index, 0, ...childrenVal);
-              else arrChild.splice(index, 1, ...childrenVal);
-              updated = engine.swapPropsAttr(tempJsx, { children: arrChild });
-            } else updated = engine.swapPropsAttr(tempJsx, { children: arrChild.concat(childrenVal) });
-            engine.updateAllReferences(updated);
+              index--
+              if (mergeIndex) arrChild.splice(index, 0, ...childrenVal)
+              else arrChild.splice(index, 1, ...childrenVal)
+              updated = engine.swapPropsAttr(tempJsx, { children: arrChild })
+            } else
+              updated = engine.swapPropsAttr(tempJsx, {
+                children: arrChild.concat(childrenVal),
+              })
+            engine.updateAllReferences(updated)
           } else {
-            let arrChild = tempJsx.props.children instanceof Array ? tempJsx.props.children : new Array(tempJsx.props.children);
+            let arrChild =
+              tempJsx.props.children instanceof Array
+                ? tempJsx.props.children
+                : new Array(tempJsx.props.children)
             if (index) {
-              index--;
-              if (mergeIndex) arrChild.splice(index, 0, childrenVal);
-              else arrChild[index] = childrenVal;
+              index--
+              if (mergeIndex) arrChild.splice(index, 0, childrenVal)
+              else arrChild[index] = childrenVal
             } else {
-              arrChild.push(childrenVal);
+              arrChild.push(childrenVal)
             }
-            let updated = engine.swapPropsAttr(tempJsx, { children: arrChild });
-            engine.updateAllReferences(updated);
+            let updated = engine.swapPropsAttr(tempJsx, { children: arrChild })
+            engine.updateAllReferences(updated)
           }
         } else {
-          let updated = engine.swapPropsAttr(tempJsx, { children: childrenVal });
-          engine.updateAllReferences(updated);
+          let updated = engine.swapPropsAttr(tempJsx, { children: childrenVal })
+          engine.updateAllReferences(updated)
         }
       }
     }
@@ -678,174 +759,212 @@ const engine = {
   /**
    * Recupera um elemento pela chave e realiza a remoção do filho especificado pelo índice informado
    * o índice obedece a regra da ordem dos filhos do elemento pai.
-   * 
-   * @param {string} key 
-   * @param {intger} index 
+   *
+   * @param {string} key
+   * @param {intger} index
    */
   removeChildren(key, index) {
     if (index instanceof Array && index !== -1) {
-      index.map((current) => {
-        engine.processRemoveChildren(key, current);
-      });
+      index.map(current => {
+        engine.processRemoveChildren(key, current)
+      })
     } else if (index === -1) {
-      engine.processResetChildren(key);
-    } else engine.processRemoveChildren(key, index);
+      engine.processResetChildren(key)
+    } else engine.processRemoveChildren(key, index)
   },
 
   /**
    * Aplica a remoção do filho de acordo com os valores informados.
-   * 
-   * @param {string} key 
-   * @param {Number} index 
+   *
+   * @param {string} key
+   * @param {Number} index
    */
   processRemoveChildren(key, index) {
-    index--;
+    index--
     if (!key && index) {
-      console.log('metodo: removeChildren - Você precisa especificar a key onde será retirada a children e o índice que corresponde a children a ser removida!');
-      return;
+      console.log(
+        'metodo: removeChildren - Você precisa especificar a key onde será retirada a children e o índice que corresponde a children a ser removida!'
+      )
+      return
     }
     if (engine.checkKey(key)) {
-      let jsxMaster = engine.getElement(key);
+      let jsxMaster = engine.getElement(key)
       if (jsxMaster.props.children instanceof Array) {
-        let newArr = jsxMaster.props.children.filter((current, idx) => index !== idx);
-        let updated = engine.swapPropsAttr(jsxMaster, { children: newArr });
-        engine.updateAllReferences(updated);
+        let newArr = jsxMaster.props.children.filter(
+          (current, idx) => index !== idx
+        )
+        let updated = engine.swapPropsAttr(jsxMaster, { children: newArr })
+        engine.updateAllReferences(updated)
       } else {
-        let updated = engine.swapPropsAttr(jsxMaster, { children: null });
-        engine.updateAllReferences(updated);
+        let updated = engine.swapPropsAttr(jsxMaster, { children: null })
+        engine.updateAllReferences(updated)
       }
-    } else console.log('Chave não encontrada!');
+    } else console.log('Chave não encontrada!')
   },
 
   /**
    * Remove todos os filhos de um elemento recuperado pela chave.
-   * 
-   * @param {string} key 
+   *
+   * @param {string} key
    */
   processResetChildren(key) {
     if (!key) {
-      console.log('metodo: removeChildren - Você precisa especificar a key onde será retirada os childrens !');
-      return;
+      console.log(
+        'metodo: removeChildren - Você precisa especificar a key onde será retirada os childrens !'
+      )
+      return
     }
     if (engine.checkKey(key)) {
-      let jsxMaster = engine.getElement(key);
-      let updated = engine.swapPropsAttr(jsxMaster, { children: null });
-      engine.updateAllReferences(updated);
-    } else console.log('Chave não encontrada!');
+      let jsxMaster = engine.getElement(key)
+      let updated = engine.swapPropsAttr(jsxMaster, { children: null })
+      engine.updateAllReferences(updated)
+    } else console.log('Chave não encontrada!')
   },
 
   /**
    * Realiza a atualização das mudanças em todo os elementos do repositório.
-   * 
-   * @param {object} obj 
+   *
+   * @param {object} obj
    */
   updateAllReferences(obj) {
-
-    let keys = engine.keys();
-    keys.map(function (current) {
-      let tempElement = engine.getStore(current);
+    let keys = engine.keys()
+    keys.map(function(current) {
+      let tempElement = engine.getStore(current)
       if (tempElement.props) {
         if (tempElement.key !== obj.key) {
-          let childrenUpdated = engine.checkChildrensInArray(obj, tempElement);
-          engine.putStore(current, engine.processElement(engine.swapPropsAttr(tempElement, { children: childrenUpdated }), current).getElement());
-        } else engine.putStore(current, engine.processElement(obj, current).getElement());
+          let childrenUpdated = engine.checkChildrensInArray(obj, tempElement)
+          engine.putStore(
+            current,
+            engine
+              .processElement(
+                engine.swapPropsAttr(tempElement, {
+                  children: childrenUpdated,
+                }),
+                current
+              )
+              .getElement()
+          )
+        } else
+          engine.putStore(
+            current,
+            engine.processElement(obj, current).getElement()
+          )
       }
-    });
+    })
   },
 
   /**
    * Verifica e aplica as mudanças nos filhos de um elemento pai.
-   * 
-   * @param {object} mainElement 
+   *
+   * @param {object} mainElement
    * @param {object} currentElement
-   * @return {object} 
+   * @return {object}
    */
   checkChildrensInArray(mainElement, currentElement) {
-
     if (currentElement && currentElement.props) {
-      let childrens = currentElement.props.children;
-      let childrenUpdated = [];
+      let childrens = currentElement.props.children
+      let childrenUpdated = []
       if (childrens && childrens instanceof Array) {
-        childrens.map(function (current) {
-          let nextChildrens = engine.checkChildrensInArray(mainElement, current);
-          childrenUpdated = engine.compareChildrens(mainElement, current, childrenUpdated, nextChildrens);
-        });
-        return childrenUpdated;
+        childrens.map(function(current) {
+          let nextChildrens = engine.checkChildrensInArray(mainElement, current)
+          childrenUpdated = engine.compareChildrens(
+            mainElement,
+            current,
+            childrenUpdated,
+            nextChildrens
+          )
+        })
+        return childrenUpdated
       } else if (childrens && childrens.props) {
-        let nextChildrens = engine.checkChildrensInArray(mainElement, childrens);
-        childrenUpdated = engine.compareChildrens(mainElement, childrens, childrenUpdated, nextChildrens);
-        return childrenUpdated;
-      } else return childrens;
-    } else return currentElement;
+        let nextChildrens = engine.checkChildrensInArray(mainElement, childrens)
+        childrenUpdated = engine.compareChildrens(
+          mainElement,
+          childrens,
+          childrenUpdated,
+          nextChildrens
+        )
+        return childrenUpdated
+      } else return childrens
+    } else return currentElement
   },
 
   /**
    * Verifica se houve alteração no filho encontrado e recupera o filho atualizado.
-   * 
-   * @param {object} mainElement 
-   * @param {object} current 
-   * @param {object} childrenUpdated 
+   *
+   * @param {object} mainElement
+   * @param {object} current
+   * @param {object} childrenUpdated
    * @param {object} nextChildrens
    * @return {object}
    */
   compareChildrens(mainElement, current, childrenUpdated, nextChildrens) {
     if (current && current.key && current.key === mainElement.key) {
-      childrenUpdated.push(mainElement);
+      childrenUpdated.push(mainElement)
     } else {
-      if (current && current.props) childrenUpdated.push(engine.swapPropsAttr(current, { children: nextChildrens }));
-      else childrenUpdated.push(current);
+      if (current && current.props)
+        childrenUpdated.push(
+          engine.swapPropsAttr(current, { children: nextChildrens })
+        )
+      else childrenUpdated.push(current)
     }
-    return childrenUpdated;
+    return childrenUpdated
   },
 
   /**
    * Realiza a inserção de novos atributos a um elemento informado.
-   * 
-   * @param {object} obj 
+   *
+   * @param {object} obj
    * @param {object} newAttr
-   * @return {object} 
+   * @return {object}
    */
   swapPropsAttr(obj, newAttr) {
-    let tempProps = Object.assign({}, obj.props, newAttr);
-    return Object.assign({}, obj, { props: tempProps });
+    let tempProps = Object.assign({}, obj.props, newAttr)
+    return Object.assign({}, obj, { props: tempProps })
   },
 
   /**
    * Verifica se existe algum item no repositório relacionado a chave informada.
-   * 
+   *
    * @param {string} key
-   * @return {boolean} 
+   * @return {boolean}
    */
   checkKey(key) {
-    return engine.keys().indexOf(key) === -1 ? false : true;
+    return engine.keys().indexOf(key) === -1 ? false : true
   },
 
   /**
    * Verifica se o elemento relacionado a chave informada contém propriedades.
-   * 
+   *
    * @param {string} key
-   * @return {boolean} 
+   * @return {boolean}
    */
   checkProps(key) {
-    return engine.checkKey(key) ? Object.keys(engine.getElement(key)).indexOf('props') === -1 ? false : true : false;
+    return engine.checkKey(key)
+      ? Object.keys(engine.getElement(key)).indexOf('props') === -1
+        ? false
+        : true
+      : false
   },
 
   /**
    * Verifica se o elemento relacionado a chave informada contém o atributo indicado.
-   * 
-   * @param {string} key 
+   *
+   * @param {string} key
    * @param {string} atrName
-   * @return {boolean} 
+   * @return {boolean}
    */
   checkAttribute(key, atrName) {
-    return engine.checkKey(key) ? engine.checkProps(key) ? Object.keys(engine.getElement(key).props).indexOf(atrName) === -1 ? false : true : false : false;
-  }
-
+    return engine.checkKey(key)
+      ? engine.checkProps(key)
+        ? Object.keys(engine.getElement(key).props).indexOf(atrName) === -1
+          ? false
+          : true
+        : false
+      : false
+  },
 }
 
-export default {
-  Staff : engine,
-  Stage : stage,
-  Scene : scene,
-  Actor : actor,
-}
+export const Staff = engine
+export const Stage = stage
+export const Scene = scene
+export const Actor = actor
