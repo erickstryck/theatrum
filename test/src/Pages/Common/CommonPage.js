@@ -10,7 +10,9 @@ export default class CommonPage extends Component {
     return (
       <div>
         <span>hello</span>
-        <Stage style={{ color: 'red' }} />
+        <Stage name="teste" style={{ color: 'red' }}>
+          <span>teste</span>
+        </Stage>
       </div>
     )
   }

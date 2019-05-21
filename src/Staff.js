@@ -1,5 +1,6 @@
 import React from 'react'
 import createReactClass from 'create-react-class'
+import ReactDOM from 'react-dom'
 
 /**
  * Responsável por importar o arquivo de configuração da minificação
@@ -25,12 +26,6 @@ class Storage {
    */
   constructor() {
     this.storage = {}
-    this.getStore.bind(this)
-    this.putStore.bind(this)
-    this.deleteStore.bind(this)
-    this.getKeys.bind(this)
-    this.getHtmlDict.bind(this)
-    this.setHtmlDict.bind(this)
     this.htmlDict = []
   }
 
@@ -137,16 +132,22 @@ class Storage {
 const injectMixin = {}
 
 const stage = props => {
-  debugger
-  let child = React.createElement('span', props, 'teste')
-  debugger
-  return createReactClass({
+  if (!props.name) {
+    console.error("You need to enter the props 'name' for the component.")
+    return null
+  }
+
+  let classStage = createReactClass({
     mixins: [injectMixin],
 
     render() {
-      return React.createElement('span', props, 'teste')
+      return this.props.children
     },
-  })()
+  })
+  let stageClass = new classStage(props)
+  stageClass.type = 'stage'
+  engine.processElement(stageClass, props.name)
+  return engine.getElement(props.name)
 }
 
 const scene = {}
