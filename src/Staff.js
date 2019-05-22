@@ -132,7 +132,12 @@ class Storage {
 const factory = key => {
   return createReactClass({
     getInitialState() {
-      engine.processElement(React.createElement('div', props), key, false, this)
+      engine.processElement(
+        React.createElement('div', this.props),
+        key,
+        false,
+        this
+      )
       return {
         staff: engine,
         key: key,
@@ -158,9 +163,23 @@ const stage = props => {
   return new (factory('stage_' + props.name))(props)
 }
 
-const scene = {}
+const scene = props => {
+  if (!props.name) {
+    console.error("You need to enter the props 'name' for the component.")
+    return null
+  }
 
-const actor = {}
+  return new (factory('scene_' + props.name))(props)
+}
+
+const actor = props => {
+  if (!props.name) {
+    console.error("You need to enter the props 'name' for the component.")
+    return null
+  }
+
+  return new (factory('actor_' + props.name))(props)
+}
 
 const engine = {
   /**
@@ -842,22 +861,17 @@ const engine = {
       if (tempElement.props) {
         if (tempElement.key !== obj.key) {
           let childrenUpdated = engine.checkChildrensInArray(obj, tempElement)
-          engine.putStore(
-            current,
-            engine
-              .processElement(
-                engine.swapPropsAttr(tempElement, {
-                  children: childrenUpdated,
-                }),
-                current
-              )
-              .getElement()
+          engine.processElement(
+            engine.swapPropsAttr(tempElement, {
+              children: childrenUpdated,
+            }),
+            current
           )
-        } else
-          engine.putStore(
-            current,
-            engine.processElement(obj, current).getElement()
-          )
+          engine.putStore(current, engine.getElement(current))
+        } else {
+          engine.processElement(obj, current)
+          engine.putStore(current, engine.getElement(current))
+        }
       }
     })
   },
