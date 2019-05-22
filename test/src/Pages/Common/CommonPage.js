@@ -6,7 +6,6 @@ export default class CommonPage extends Component {
    */
   render() {
     debugger
-    console.log(Stage)
     return (
       <div>
         <span>hello</span>

@@ -129,7 +129,25 @@ class Storage {
   }
 }
 
-const injectMixin = {}
+const factory = key => {
+  return createReactClass({
+    getInitialState() {
+      engine.processElement(React.createElement('div', props), key, false, this)
+      return {
+        staff: engine,
+        key: key,
+      }
+    },
+
+    componentDidUpdate() {
+      this.state.staff.setProps(this.state.key, this.props)
+    },
+
+    render() {
+      return this.state.staff.getElement(this.state.key)
+    },
+  })
+}
 
 const stage = props => {
   if (!props.name) {
@@ -137,17 +155,7 @@ const stage = props => {
     return null
   }
 
-  let classStage = createReactClass({
-    mixins: [injectMixin],
-
-    render() {
-      return this.props.children
-    },
-  })
-  let stageClass = new classStage(props)
-  stageClass.type = 'stage'
-  engine.processElement(stageClass, props.name)
-  return engine.getElement(props.name)
+  return new (factory('stage_' + props.name))(props)
 }
 
 const scene = {}
