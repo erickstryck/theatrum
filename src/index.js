@@ -1,2 +1,2 @@
-import DeathStar from './DeathStar';
-export default DeathStar;
+import Teatrum from './Teatrum'
+export default Teatrum

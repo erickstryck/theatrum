@@ -1,10 +1,32 @@
 import React, { Component } from 'react'
-import { Stage, Scene, Actor, Staff } from '../../../../src/Staff'
+import { Stage, Scene, Actor, Staff } from '../../../../src/Teatrum'
 export default class CommonPage extends Component {
   componentDidMount() {
     debugger
-    setTimeout(() => {
-      Staff.setAttribute('teste4', { color: 'yellow' })
+    setInterval(() => {
+      var myArray = ['red', 'green', 'blue', 'yellow', 'black']
+      var keys = Staff.keys()
+      let idx = Math.floor(Math.random() * keys.length)
+      Staff.setAttribute(keys[idx], {
+        style: {
+          color: myArray[Math.floor(Math.random() * myArray.length)],
+          fontSize: 70,
+          position: 'relative',
+          top: Math.floor(Math.random() * 400),
+          left: Math.floor(Math.random() * 600),
+        },
+      })
+      idx = Math.floor(Math.random() * keys.length)
+      Staff.setAttribute(keys[idx], {
+        style: {
+          width: 900,
+          height: 500,
+          backgroundColor: myArray[Math.floor(Math.random() * myArray.length)],
+          position: 'fixed',
+          top: Math.floor(Math.random() * 400),
+          left: Math.floor(Math.random() * 600),
+        },
+      })
     }, 3000)
   }
 

@@ -1,7 +1,5 @@
 import React from 'react'
 import createReactClass from 'create-react-class'
-import ReactDOM from 'react-dom'
-
 /**
  * Responsável por importar o arquivo de configuração da minificação
  */
@@ -84,7 +82,7 @@ class Storage {
     if (context) {
       value['update'] = () => {
         value.setState({
-          deathStartUpdater: value.deathStartUpdater ? true : false,
+          teatrumUpdater: value.teatrumUpdater ? true : false,
         })
       }
       let temp = {}
@@ -144,11 +142,9 @@ const factory = key => {
       }
     },
 
-    componentDidUpdate() {
-      this.state.staff.setProps(this.state.key, this.props)
-    },
-
     render() {
+      debugger
+      let teste = this.state.staff.getElement(this.state.key)
       return this.state.staff.getElement(this.state.key)
     },
   })
@@ -247,24 +243,7 @@ const engine = {
    * @return {object | undefined}
    */
   putStore(key, value, context) {
-    if (context) {
-      value['update'] = () => {
-        value.setState({
-          deathStartUpdater: value.deathStartUpdater ? true : false,
-        })
-      }
-      let temp = {}
-      Object.keys(value).map(current => {
-        if (typeof value[current] === 'function') {
-          temp[current] = value[current]
-        }
-      })
-      temp['state'] = value.state
-      Storage.setItemStorage(key, temp)
-    } else {
-      Storage.setItemStorage(key, value)
-      return value
-    }
+    return Storage.putStore(key, value, context)
   },
 
   /**
@@ -401,7 +380,14 @@ const engine = {
     if (context) {
       engine.setContext(key, context)
     }
-    //return engine.manipulate(key);
+  },
+
+  /**
+   * Dispara o update quando uma ação é feita nos componentes
+   */
+  propagateUpdates(key) {
+    let context = engine.getContext(key.split('-')[0])
+    context.update()
   },
 
   /**
@@ -494,29 +480,6 @@ const engine = {
     return engine.putStore(key, engine.container(jsxData, copy))
   },
 
-  // /**
-  //  * Recupera um elemento React do repositório e o disponibiliza para manipulação.
-  //  *
-  //  * @param {string} key
-  //  * @return {object}
-  //  */
-  // manipulate(key) {
-  //   key = engine.minf(key);
-  //   return engine.checkKey(key) ? new Bridge(key) : '';
-  // },
-
-  // /**
-  //  * Recupera um elemento React do repositório cria uma cópia com a nova chave e o disponibiliza para manipulação.
-  //  *
-  //  * @param {string} key
-  //  * @param {string} newKey
-  //  * @return {object}
-  //  */
-  // manipulateCopy(key, newKey) {
-  //   key = engine.minf(key);
-  //   return engine.manipulate(key).copy(newKey);
-  // },
-
   /**
    * Recupera um elemento do repositório para renderização.
    *
@@ -599,9 +562,11 @@ const engine = {
    * @return {object | undefined}
    */
   copy(key, keyNew) {
-    return engine.checkKey(key)
+    let element = engine.checkKey(key)
       ? engine.processElement(engine.getElement(key), keyNew, true)
       : ''
+
+    return element
   },
 
   /**
@@ -952,7 +917,14 @@ const engine = {
    * @return {boolean}
    */
   checkKey(key) {
-    return engine.keys().indexOf(key) === -1 ? false : true
+    let hasKey = engine.keys().indexOf(key) === -1 ? false : true
+
+    if (!hasKey) {
+      console.error(
+        `this key "${key}" was not found, see the available keys: ${engine.keys()}`
+      )
+    }
+    return hasKey
   },
 
   /**
@@ -987,7 +959,67 @@ const engine = {
   },
 }
 
-export const Staff = engine
+const bridge = {
+  getElement(key) {
+    return engine.getElement(key)
+  },
+
+  copy(key, newKey, preventUpdate = false) {
+    let element = engine.copy(key, newKey)
+    if (!preventUpdate) engine.propagateUpdates(key)
+    return element
+  },
+
+  keys() {
+    return engine.keys()
+  },
+
+  setAttribute(key, attributes, preventUpdate = false) {
+    engine.setAttribute(key, attributes)
+    if (!preventUpdate) engine.propagateUpdates(key)
+  },
+
+  setProps(key, props, preventUpdate = false) {
+    engine.setProps(key, props)
+    if (!preventUpdate) engine.propagateUpdates(key)
+  },
+
+  modifyAttribute(key, value, preventUpdate = false) {
+    engine.modifyAttribute(key, value)
+    if (!preventUpdate) engine.propagateUpdates(key)
+  },
+
+  removeAttribute(key, atrName, preventUpdate = false) {
+    engine.removeAttribute(key, atrName)
+    if (!preventUpdate) engine.propagateUpdates(key)
+  },
+
+  setChildren(
+    key,
+    children,
+    index = '',
+    mergeIndex = false,
+    preventUpdate = false
+  ) {
+    engine.setChildren(key, children, index, mergeIndex)
+    if (!preventUpdate) engine.propagateUpdates(key)
+  },
+
+  removeChildren(key, index, preventUpdate = false) {
+    engine.removeChildren(key, index)
+    if (!preventUpdate) engine.propagateUpdates(key)
+  },
+
+  checkAttribute(key, atrName, preventUpdate = false) {
+    return engine.checkAttribute(key, atrName)
+  },
+
+  destroy(keys) {
+    engine.destroy(keys)
+  },
+}
+
+export const Staff = bridge
 export const Stage = stage
 export const Scene = scene
 export const Actor = actor
