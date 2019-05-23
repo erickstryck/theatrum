@@ -143,8 +143,6 @@ const factory = key => {
     },
 
     render() {
-      debugger
-      let teste = this.state.staff.getElement(this.state.key)
       return this.state.staff.getElement(this.state.key)
     },
   })
@@ -380,6 +378,8 @@ const engine = {
     if (context) {
       engine.setContext(key, context)
     }
+
+    return data
   },
 
   /**
@@ -558,14 +558,21 @@ const engine = {
    * Recupera o elemento por meio de sua chave e realiza uma cópia aplicando a ela uma nova chave.
    *
    * @param {string} key
-   * @param {string} keyNew
+   * @param {string} newKey
    * @return {object | undefined}
    */
-  copy(key, keyNew) {
-    let element = engine.checkKey(key)
-      ? engine.processElement(engine.getElement(key), keyNew, true)
-      : ''
+  copy(key, newKey, target) {
+    let element =
+      engine.checkKey(key) && engine.checkKey(target)
+        ? engine.processElement(
+            engine.getElement(key),
+            newKey,
+            true,
+            engine.getContext(target)
+          )
+        : ''
 
+    if (element) engine.setChildren(target, element)
     return element
   },
 
@@ -712,8 +719,9 @@ const engine = {
       let tempJsx = engine.getElement(key)
       if (engine.checkProps(key)) {
         if (tempJsx.props.children) {
+          let arrChild = ''
           if (childrenVal instanceof Array) {
-            let arrChild = tempJsx.props.children
+            arrChild = tempJsx.props.children
             if (!(arrChild instanceof Array)) arrChild = new Array(arrChild)
             let updated = {}
             if (index) {
@@ -727,7 +735,7 @@ const engine = {
               })
             engine.updateAllReferences(updated)
           } else {
-            let arrChild =
+            arrChild =
               tempJsx.props.children instanceof Array
                 ? tempJsx.props.children
                 : new Array(tempJsx.props.children)
@@ -964,8 +972,20 @@ const bridge = {
     return engine.getElement(key)
   },
 
-  copy(key, newKey, preventUpdate = false) {
-    let element = engine.copy(key, newKey)
+  copy(key, newKey, target, preventUpdate = false) {
+    if (!key || !newKey || !target) {
+      console.error(
+        'For cloning you must enter:an existing key, a new key, a target key where the new element will be inserted'
+      )
+      return
+    }
+    if (key == target) {
+      console.error('The target key can not be the same key to be cloned')
+      return
+    }
+
+    let element = engine.copy(key, newKey, target)
+
     if (!preventUpdate) engine.propagateUpdates(key)
     return element
   },
