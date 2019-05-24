@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Stage, Scene, Actor, Staff } from '../../../../src/Teatrum'
 export default class CommonPage extends Component {
   componentDidMount() {
-    Staff.copy('scene_teste2', `teste20`, 'stage_teste')
     // setInterval(() => {
     //   var myArray = ['red', 'green', 'blue', 'yellow', 'black']
     //   var keys = Staff.keys()

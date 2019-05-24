@@ -561,19 +561,12 @@ const engine = {
    * @param {string} newKey
    * @return {object | undefined}
    */
-  copy(key, newKey, target) {
-    let element =
-      engine.checkKey(key) && engine.checkKey(target)
-        ? engine.processElement(
-            engine.getElement(key),
-            newKey,
-            true,
-            engine.getContext(target)
-          )
-        : ''
+  copy(key, newKey) {
+    engine.checkKey(key)
+      ? engine.processElement(engine.getElement(key), newKey, true)
+      : ''
 
-    if (element) engine.setChildren(target, element)
-    return element
+    return engine.getElement(newKey)
   },
 
   /**
@@ -972,22 +965,13 @@ const bridge = {
     return engine.getElement(key)
   },
 
-  copy(key, newKey, target, preventUpdate = false) {
-    if (!key || !newKey || !target) {
-      console.error(
-        'For cloning you must enter:an existing key, a new key, a target key where the new element will be inserted'
-      )
-      return
-    }
-    if (key == target) {
-      console.error('The target key can not be the same key to be cloned')
+  copy(key, newKey) {
+    if (!key || !newKey) {
+      console.error('For cloning you must enter:an existing key and a new key')
       return
     }
 
-    let element = engine.copy(key, newKey, target)
-
-    if (!preventUpdate) engine.propagateUpdates(key)
-    return element
+    return engine.copy(key, newKey)
   },
 
   keys() {
