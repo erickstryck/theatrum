@@ -106,7 +106,14 @@ class Storage {
    * @return {object}
    */
   static getStore(key) {
-    return Storage.getInstance().storage[key]
+    let element = ''
+    try {
+      element = Storage.getInstance().storage[key]
+    } catch (e) {
+      console.error(`The key '${key}' does not exist`)
+    }
+
+    return element
   }
 
   /**
@@ -149,12 +156,85 @@ const factory = key => {
 }
 
 const stage = props => {
-  if (!props.name) {
-    console.error("You need to enter the props 'name' for the component.")
+  if (!props.name || !props.path) {
+    console.error(
+      "You need to enter the props 'name' and 'path' for the component."
+    )
     return null
   }
 
-  return new (factory('stage_' + props.name))(props)
+  let objectClass = new (factory('stage_' + props.name))(props)
+  Storage.putStore('class_' + props.name, objectClass)
+  Storage.putStore('path_' + props.path, props.name)
+  return Storage.getStore('class_' + props.name)
+}
+
+const teatrum = props => {
+  if (!props.name || !props.init) {
+    console.error(
+      "You need to enter the props 'name' and 'init' for the component."
+    )
+    return null
+  }
+
+  return createReactClass({
+    getInitialState() {
+      return {
+        storage: Storage,
+        key: key,
+        currentClass: '',
+        path: [],
+        idx: 0,
+      }
+    },
+    push(path) {
+      this.setState({
+        idx: ++idx,
+        path: this.state.path.push(path),
+        currentClass: Store.getStore('class_' + Store.getStore('path_' + path)),
+      })
+    },
+    back() {
+      let idx = --this.state.idx
+      if (idx >= 0) {
+        this.setState({
+          idx: idx,
+          currentClass: Store.getStore(
+            'class_' + Store.getStore('path_' + this.state.path[idx])
+          ),
+        })
+      }
+    },
+    reset() {
+      let idx = 0
+      this.setState({
+        idx: idx,
+        currentClass: Store.getStore(
+          'class_' + Store.getStore('path_' + this.state.path[idx])
+        ),
+      })
+    },
+    forward() {
+      let idx = ++this.state.idx
+      if (idx <= this.state.path.length - 1) {
+        this.setState({
+          idx: idx,
+          currentClass: Store.getStore(
+            'class_' + Store.getStore('path_' + this.state.path[idx])
+          ),
+        })
+      }
+    },
+    render() {
+      Storage.putStore('state_path_' + props.name, {
+        push: this.push,
+        back: this.back,
+        forward: this.forward,
+        reset: this.reset,
+      })
+      return this.state.currentClass
+    },
+  })
 }
 
 const scene = props => {
@@ -1016,6 +1096,21 @@ const bridge = {
 
   checkAttribute(key, atrName, preventUpdate = false) {
     return engine.checkAttribute(key, atrName)
+  },
+
+  stagePush(key, path) {
+    let actions = Storage.getStore('state_path_' + key)
+    actions.push(path)
+  },
+
+  stageBack(key) {
+    let actions = Storage.getStore('state_path_' + key)
+    actions.back()
+  },
+
+  stageForward(key) {
+    let actions = Storage.getStore('state_path_' + key)
+    actions.forward()
   },
 
   destroy(keys) {
