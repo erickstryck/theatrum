@@ -163,7 +163,7 @@ const stage = props => {
     return null
   }
 
-  props = engine.swapPropsAttr(props, {children: props.component})
+  props = engine.swapPropsAttr(props, { children: props.component })
   let objectClass = new (factory('stage_' + props.name))(props)
   Storage.putStore('class_' + props.name, objectClass)
   Storage.putStore('path_' + props.path, props.name)
@@ -178,9 +178,6 @@ const teatrum = props => {
     return null
   }
 
-  debugger
-  let teste = engine.keys()
-  debugger
   return new (createReactClass({
     getInitialState() {
       return {
@@ -195,7 +192,7 @@ const teatrum = props => {
       let objClass = Storage.getStore(
         'class_' + Storage.getStore('path_' + this.props.init)
       )
-      debugger
+
       this.setState({
         currentClass: objClass.props.component,
       })
