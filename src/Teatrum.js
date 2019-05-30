@@ -157,12 +157,13 @@ const factory = key => {
 
 const stage = props => {
   if (!props.name || !props.path) {
-    console.error(
-      "You need to enter the props 'name' and 'path' for the component."
-    )
+    console.error({
+      error: "You need to enter the props 'name' and 'path' for the component.",
+    })
     return null
   }
 
+  props = engine.swapPropsAttr(props, {children: props.component})
   let objectClass = new (factory('stage_' + props.name))(props)
   Storage.putStore('class_' + props.name, objectClass)
   Storage.putStore('path_' + props.path, props.name)
@@ -177,21 +178,36 @@ const teatrum = props => {
     return null
   }
 
-  return createReactClass({
+  debugger
+  let teste = engine.keys()
+  debugger
+  return new (createReactClass({
     getInitialState() {
       return {
         storage: Storage,
-        key: key,
         currentClass: '',
-        path: [],
+        path: [this.props.init],
         idx: 0,
       }
     },
+
+    componentDidMount() {
+      let objClass = Storage.getStore(
+        'class_' + Storage.getStore('path_' + this.props.init)
+      )
+      debugger
+      this.setState({
+        currentClass: objClass.props.component,
+      })
+    },
+
     push(path) {
       this.setState({
         idx: ++idx,
         path: this.state.path.push(path),
-        currentClass: Store.getStore('class_' + Store.getStore('path_' + path)),
+        currentClass: Storage.getStore(
+          'class_' + Storage.getStore('path_' + path)
+        ),
       })
     },
     back() {
@@ -199,8 +215,8 @@ const teatrum = props => {
       if (idx >= 0) {
         this.setState({
           idx: idx,
-          currentClass: Store.getStore(
-            'class_' + Store.getStore('path_' + this.state.path[idx])
+          currentClass: Storage.getStore(
+            'class_' + Storage.getStore('path_' + this.state.path[idx])
           ),
         })
       }
@@ -209,8 +225,8 @@ const teatrum = props => {
       let idx = 0
       this.setState({
         idx: idx,
-        currentClass: Store.getStore(
-          'class_' + Store.getStore('path_' + this.state.path[idx])
+        currentClass: Storage.getStore(
+          'class_' + Storage.getStore('path_' + this.state.path[idx])
         ),
       })
     },
@@ -219,22 +235,25 @@ const teatrum = props => {
       if (idx <= this.state.path.length - 1) {
         this.setState({
           idx: idx,
-          currentClass: Store.getStore(
-            'class_' + Store.getStore('path_' + this.state.path[idx])
+          currentClass: Storage.getStore(
+            'class_' + Storage.getStore('path_' + this.state.path[idx])
           ),
         })
       }
+      Storage.getStore('class_' + Storage.getStore('path_' + this.props.init))
     },
     render() {
-      Storage.putStore('state_path_' + props.name, {
+      Storage.putStore('state_path_' + this.props.name, {
         push: this.push,
         back: this.back,
         forward: this.forward,
         reset: this.reset,
       })
       return this.state.currentClass
+        ? this.state.currentClass
+        : this.props.children
     },
-  })
+  }))(props)
 }
 
 const scene = props => {
@@ -1122,3 +1141,4 @@ export const Staff = bridge
 export const Stage = stage
 export const Scene = scene
 export const Actor = actor
+export const Teatrum = teatrum
