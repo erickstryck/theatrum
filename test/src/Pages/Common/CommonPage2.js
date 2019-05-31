@@ -1,11 +1,7 @@
 import React, { Component } from 'react'
 import { Scene, Actor, Staff } from '../../../../src/Teatrum'
 export default class CommonPage extends Component {
-  componentDidMount() {
-    setTimeout(() => {
-      Staff.history('teatrum').push('/2')
-    }, 5000)
-  }
+  componentDidMount() {}
 
   /**
    * Renderiza o componente
@@ -13,9 +9,9 @@ export default class CommonPage extends Component {
   render() {
     return (
       <div>
-        <Scene name="teste2" style={{ color: 'blue' }}>
+        <Scene name="teste2" style={{ color: 'red' }}>
           <span>test2</span>
-          <Actor name="teste4" style={{ color: 'green' }}>
+          <Actor name="teste4" style={{ color: 'red' }}>
             <span>teste3</span>
           </Actor>
         </Scene>

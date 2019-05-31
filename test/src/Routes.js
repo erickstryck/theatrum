@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import CommonPage from 'Pages/Common/CommonPage'
+import CommonPage2 from 'Pages/Common/CommonPage2'
 import { Stage, Teatrum } from '../../src/Teatrum'
 
 /**
@@ -18,6 +19,12 @@ export default class App extends Component {
           path="/"
           style={{ color: 'red' }}
           component={<CommonPage />}
+        />
+        <Stage
+          name="teste2"
+          path="/2"
+          style={{ color: 'red' }}
+          component={<CommonPage2 />}
         />
       </Teatrum>
     )

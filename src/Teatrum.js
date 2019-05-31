@@ -196,9 +196,17 @@ const teatrum = props => {
       this.setState({
         currentClass: objClass.props.component,
       })
+
+      Storage.putStore('state_path_' + this.props.name, {
+        push: this.push,
+        back: this.back,
+        forward: this.forward,
+        reset: this.reset,
+      })
     },
 
     push(path) {
+      let idx = ++this.state.idx
       this.setState({
         idx: ++idx,
         path: this.state.path.push(path),
@@ -240,14 +248,10 @@ const teatrum = props => {
       Storage.getStore('class_' + Storage.getStore('path_' + this.props.init))
     },
     render() {
-      Storage.putStore('state_path_' + this.props.name, {
-        push: this.push,
-        back: this.back,
-        forward: this.forward,
-        reset: this.reset,
-      })
       return this.state.currentClass
-        ? this.state.currentClass
+        ? this.state.currentClass.update
+          ? this.state.currentClass.render().props.component
+          : this.state.currentClass
         : this.props.children
     },
   }))(props)
@@ -1077,6 +1081,10 @@ const bridge = {
   setAttribute(key, attributes, preventUpdate = false) {
     engine.setAttribute(key, attributes)
     if (!preventUpdate) engine.propagateUpdates(key)
+  },
+
+  history(key) {
+    return engine.getStore('state_path_' + key)
   },
 
   setProps(key, props, preventUpdate = false) {
