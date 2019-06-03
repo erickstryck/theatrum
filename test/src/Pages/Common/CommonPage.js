@@ -2,9 +2,18 @@ import React, { Component } from 'react'
 import { Scene, Actor, Staff } from '../../../../src/Teatrum'
 export default class CommonPage extends Component {
   componentDidMount() {
-    setTimeout(() => {
-      Staff.history('teatrum').push('/2')
-    }, 5000)
+    var myArray = ['red', 'green', 'blue', 'yellow', 'black']
+    setInterval(() => {
+      Staff.setAttribute('actor_teste4', {
+        style: {
+          color: myArray[Math.floor(Math.random() * myArray.length)],
+          fontSize: 70,
+          position: 'relative',
+          top: Math.floor(Math.random() * 400),
+          left: Math.floor(Math.random() * 600),
+        },
+      })
+    }, 60)
   }
 
   /**

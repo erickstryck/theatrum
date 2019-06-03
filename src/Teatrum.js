@@ -86,11 +86,13 @@ class Storage {
         })
       }
       let temp = {}
-      Object.keys(value).map(current => {
+      let values = Object.keys(value)
+      for (let x = 0; x < values.length; x++) {
+        let current = values[x]
         if (typeof value[current] === 'function') {
           temp[current] = value[current]
         }
-      })
+      }
       temp['state'] = value.state
       Storage.getInstance().storage[key] = temp
     } else {
@@ -293,7 +295,7 @@ const engine = {
       Object.keys(props).indexOf('key') !== -1
         ? Object.assign({}, props, { key: props.key })
         : Object.assign({}, props, { key: this.getId() })
-    return React.createElement(type, props, children)
+    return React.createElement(type ? type : 'div', props, children)
   },
 
   /**
@@ -379,19 +381,23 @@ const engine = {
   destroy(keys) {
     let store = engine.keys()
     if (keys instanceof Array) {
-      keys.map(currentItem => {
-        store.map(currentStore => {
+      for (let x = 0; x < keys.length; x++) {
+        for (y = 0; y < store.length; y++) {
+          let currentItem = keys[x]
+          let currentStore = store[y]
+
           if (currentStore.split('-')[0] === currentItem) {
             Storage.deleteStore(currentItem)
           }
-        })
-      })
+        }
+      }
     } else {
-      store.map(currentStore => {
+      for (y = 0; y < store.length; y++) {
+        let currentStore = store[y]
         if (currentStore.split('-')[0] === keys) {
           Storage.deleteStore(currentStore)
         }
-      })
+      }
     }
   },
 
@@ -403,7 +409,8 @@ const engine = {
    */
   minf(key) {
     if (minify) {
-      key.match(/(-\w[a-zA-Z]+)/g)
+      let arrMatch = key.match(/(-\w[a-zA-Z]+)/g)
+      arrMatch
         ? key.match(/(-\w[a-zA-Z]+)/g).map(current => {
             if (
               Storage.getHtmlDict().indexOf(
@@ -499,7 +506,8 @@ const engine = {
   mapChildrens(data, key) {
     if (data) {
       if (data instanceof Array) {
-        data.map(function(current, index) {
+        for (let index = 0; index < data.length; index++) {
+          let current = data[index]
           if (current) {
             ++index
             if (current.props)
@@ -513,7 +521,7 @@ const engine = {
                 current.key
               )
           }
-        })
+        }
       } else {
         if (data.props)
           engine.mapChildrens(
@@ -704,9 +712,11 @@ const engine = {
    * @param {object} attValues
    */
   modifyAttribute(key, attValues) {
-    Object.keys(attValues).map(current => {
+    let arrObjects = Object.keys(attValues)
+    for (let x = 0; x < arrObjects.length; x++) {
+      let current = arrObjects[x]
       engine.processModify(key, current, attValues[current])
-    })
+    }
   },
 
   /**
@@ -749,9 +759,10 @@ const engine = {
    */
   removeAttribute(key, attValues) {
     if (attValues instanceof Array) {
-      attValues.map(current => {
+      for (let x = 0; x < attValues.length; x++) {
+        let current = attValues[x]
         engine.processRemove(key, current)
-      })
+      }
     } else {
       engine.processRemove(key, attValues)
     }
@@ -781,9 +792,10 @@ const engine = {
           let index = Object.keys(tempJsx.props)
           index.splice(index.indexOf(atrName), 1)
           let tempObj = {}
-          index.map(current => {
+          for (let x = 0; x < index.length; x++) {
+            let current = index[x]
             tempObj[current] = tempJsx.props[current]
-          })
+          }
           let result = Object.assign({}, tempJsx, { props: tempObj })
           engine.updateAllReferences(result)
         }
@@ -859,9 +871,10 @@ const engine = {
    */
   removeChildren(key, index) {
     if (index instanceof Array && index !== -1) {
-      index.map(current => {
+      for (let x = 0; x < index.length; x++) {
+        let current = index[x]
         engine.processRemoveChildren(key, current)
-      })
+      }
     } else if (index === -1) {
       engine.processResetChildren(key)
     } else engine.processRemoveChildren(key, index)
@@ -922,7 +935,8 @@ const engine = {
    */
   updateAllReferences(obj) {
     let keys = engine.keys()
-    keys.map(function(current) {
+    for (let x = 0; x < keys.length; x++) {
+      let current = keys[x]
       let tempElement = engine.getStore(current)
       if (tempElement.props) {
         if (tempElement.key !== obj.key) {
@@ -939,7 +953,7 @@ const engine = {
           engine.putStore(current, engine.getElement(current))
         }
       }
-    })
+    }
   },
 
   /**
@@ -954,7 +968,8 @@ const engine = {
       let childrens = currentElement.props.children
       let childrenUpdated = []
       if (childrens && childrens instanceof Array) {
-        childrens.map(function(current) {
+        for (let x = 0; x < childrens.length; x++) {
+          let current = childrens[x]
           let nextChildrens = engine.checkChildrensInArray(mainElement, current)
           childrenUpdated = engine.compareChildrens(
             mainElement,
@@ -962,7 +977,7 @@ const engine = {
             childrenUpdated,
             nextChildrens
           )
-        })
+        }
         return childrenUpdated
       } else if (childrens && childrens.props) {
         let nextChildrens = engine.checkChildrensInArray(mainElement, childrens)
