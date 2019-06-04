@@ -140,7 +140,10 @@ const factory = key => {
   return createReactClass({
     getInitialState() {
       engine.processElement(
-        React.createElement('div', this.props),
+        React.createElement(
+          'div',
+          key.includes('stage') ? this.props.props : this.props
+        ),
         key,
         false,
         this
@@ -166,6 +169,7 @@ const stage = props => {
   }
 
   props = engine.swapPropsAttr(props, { children: props.component })
+  delete props.component
   let objectClass = new (factory('stage_' + props.name))(props)
   Storage.putStore('class_' + props.name, objectClass)
   Storage.putStore('path_' + props.path, props.name)
@@ -208,10 +212,10 @@ const teatrum = props => {
     },
 
     push(path) {
-      let idx = ++this.state.idx
+      let idx = this.state.idx
+      this.state.path.push(path)
       this.setState({
         idx: ++idx,
-        path: this.state.path.push(path),
         currentClass: Storage.getStore(
           'class_' + Storage.getStore('path_' + path)
         ),
@@ -252,7 +256,7 @@ const teatrum = props => {
     render() {
       return this.state.currentClass
         ? this.state.currentClass.update
-          ? this.state.currentClass.render().props.component
+          ? this.state.currentClass.render()
           : this.state.currentClass
         : this.props.children
     },
