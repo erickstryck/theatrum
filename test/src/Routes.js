@@ -13,7 +13,7 @@ export default class App extends Component {
   render() {
     //No momento temos apenas linguagem em PT-BR
     return (
-      <Teatrum name="teatrum" init="/">
+      <Teatrum name="teatrum" init="/" browser>
         <Stage
           name="teste"
           path="/"

@@ -184,6 +184,15 @@ const teatrum = props => {
     return null
   }
 
+  if (props.browser) {
+    if (window.location.pathname != '/') {
+      props = engine.swapPropsAttr(
+        { props: props },
+        { init: window.location.pathname }
+      ).props
+    }
+  }
+
   return new (createReactClass({
     getInitialState() {
       return {
@@ -196,7 +205,7 @@ const teatrum = props => {
 
     componentDidMount() {
       let objClass = Storage.getStore(
-        'class_' + Storage.getStore('path_' + this.props.init)
+        'class_' + Storage.getStore('path_' + this.state.path[this.state.idx])
       )
 
       this.setState({
@@ -254,6 +263,7 @@ const teatrum = props => {
       Storage.getStore('class_' + Storage.getStore('path_' + this.props.init))
     },
     render() {
+      console.log(this.props.init)
       return this.state.currentClass
         ? this.state.currentClass.update
           ? this.state.currentClass.render()
