@@ -961,10 +961,8 @@ const engine = {
             }),
             current
           )
-          engine.putStore(current, engine.getElement(current))
         } else {
           engine.processElement(obj, current)
-          engine.putStore(current, engine.getElement(current))
         }
       }
     }
