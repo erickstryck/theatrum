@@ -97,8 +97,9 @@ class Storage {
       Storage.getInstance().storage[key] = temp
     } else {
       Storage.getInstance().storage[key] = value
-      return value
     }
+
+    return value
   }
 
   /**
@@ -305,10 +306,7 @@ const engine = {
     props = props.children
       ? Object.assign({}, props, { children: null })
       : props
-    props =
-      Object.keys(props).indexOf('key') !== -1
-        ? Object.assign({}, props, { key: props.key })
-        : Object.assign({}, props, { key: this.getId() })
+    props = Object.assign({}, props, { key: this.getId() })
     return React.createElement(type ? type : 'div', props, children)
   },
 
@@ -953,77 +951,11 @@ const engine = {
       let current = keys[x]
       let tempElement = engine.getStore(current)
       if (tempElement.props) {
-        if (tempElement.key !== obj.key) {
-          let childrenUpdated = engine.checkChildrensInArray(obj, tempElement)
-          engine.processElement(
-            engine.swapPropsAttr(tempElement, {
-              children: childrenUpdated,
-            }),
-            current
-          )
-        } else {
+        if (tempElement.key == obj.key) {
           engine.processElement(obj, current)
         }
       }
     }
-  },
-
-  /**
-   * Verifica e aplica as mudanças nos filhos de um elemento pai.
-   *
-   * @param {object} mainElement
-   * @param {object} currentElement
-   * @return {object}
-   */
-  checkChildrensInArray(mainElement, currentElement) {
-    if (currentElement && currentElement.props) {
-      let childrens = currentElement.props.children
-      let childrenUpdated = []
-      if (childrens && childrens instanceof Array) {
-        for (let x = 0; x < childrens.length; x++) {
-          let current = childrens[x]
-          let nextChildrens = engine.checkChildrensInArray(mainElement, current)
-          childrenUpdated = engine.compareChildrens(
-            mainElement,
-            current,
-            childrenUpdated,
-            nextChildrens
-          )
-        }
-        return childrenUpdated
-      } else if (childrens && childrens.props) {
-        let nextChildrens = engine.checkChildrensInArray(mainElement, childrens)
-        childrenUpdated = engine.compareChildrens(
-          mainElement,
-          childrens,
-          childrenUpdated,
-          nextChildrens
-        )
-        return childrenUpdated
-      } else return childrens
-    } else return currentElement
-  },
-
-  /**
-   * Verifica se houve alteração no filho encontrado e recupera o filho atualizado.
-   *
-   * @param {object} mainElement
-   * @param {object} current
-   * @param {object} childrenUpdated
-   * @param {object} nextChildrens
-   * @return {object}
-   */
-  compareChildrens(mainElement, current, childrenUpdated, nextChildrens) {
-    if (current && current.key && current.key === mainElement.key) {
-      childrenUpdated.push(mainElement)
-    } else {
-      if (current && current.props)
-        childrenUpdated.push(
-          engine.swapPropsAttr(current, { children: nextChildrens })
-        )
-      else childrenUpdated.push(current)
-    }
-    return childrenUpdated
   },
 
   /**
