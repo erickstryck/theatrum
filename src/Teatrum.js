@@ -1,5 +1,6 @@
 import React from 'react'
 import createReactClass from 'create-react-class'
+
 /**
  * Responsável por importar o arquivo de configuração da minificação
  */
@@ -209,6 +210,16 @@ const teatrum = props => {
         'class_' + Storage.getStore('path_' + this.state.path[this.state.idx])
       )
 
+      if (!objClass) {
+        objClass = Storage.getStore(
+          'class_' + Storage.getStore('path_' + this.props.redirect)
+        )
+        this.state.path.splice(this.state.idx, 1)
+        this.state.path.push(this.props.redirect)
+        if (this.props.browser)
+          window.history.pushState(null, '', this.props.redirect)
+      }
+
       this.setState({
         currentClass: objClass.props.component,
       })
@@ -264,7 +275,6 @@ const teatrum = props => {
       Storage.getStore('class_' + Storage.getStore('path_' + this.props.init))
     },
     render() {
-      console.log(this.props.init)
       return this.state.currentClass
         ? this.state.currentClass.update
           ? this.state.currentClass.render()

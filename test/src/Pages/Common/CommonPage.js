@@ -28,7 +28,7 @@ export default class CommonPage extends Component {
                       position: 'absolute',
                       top: e.clientY,
                       left: e.clientX,
-                      fontSize: 10,
+                      fontSize: 30,
                     }}
                   >
                     &bull;
