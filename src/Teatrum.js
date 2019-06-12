@@ -141,15 +141,6 @@ class Storage {
 const factory = key => {
   return createReactClass({
     getInitialState() {
-      engine.processElement(
-        React.createElement(
-          'div',
-          key.includes('stage') ? this.props.props : this.props
-        ),
-        key,
-        false,
-        this
-      )
       return {
         staff: engine,
         key: key,
@@ -157,7 +148,21 @@ const factory = key => {
     },
 
     render() {
-      return this.state.staff.getElement(this.state.key)
+      let element = engine.processElement(
+        React.createElement('div', this.props),
+        key,
+        false,
+        this
+      )
+
+      if (this.props.path) {
+        let currentPath = this.state.staff
+          .getStore('state_path_' + this.props.owner)
+          .currentPath()
+        if (this.props.path != currentPath) element = ''
+      }
+
+      return element
     },
   })
 }
@@ -170,8 +175,6 @@ const stage = props => {
     return null
   }
 
-  props = engine.swapPropsAttr(props, { children: props.component })
-  delete props.component
   let objectClass = new (factory('stage_' + props.name))(props)
   Storage.putStore('class_' + props.name, objectClass)
   Storage.putStore('path_' + props.path, props.name)
@@ -197,6 +200,14 @@ const teatrum = props => {
 
   return new (createReactClass({
     getInitialState() {
+      Storage.putStore('state_path_' + this.props.name, {
+        push: this.push,
+        back: this.back,
+        forward: this.forward,
+        reset: this.reset,
+        currentPath: this.currentPath,
+      })
+
       return {
         storage: Storage,
         currentClass: '',
@@ -220,56 +231,142 @@ const teatrum = props => {
           window.history.pushState(null, '', this.props.redirect)
       }
 
-      this.setState({
-        currentClass: objClass.props.component,
-      })
+      if (this.props.browser && !this.props.ignorePersistence) {
+        let historyProps = window.localStorage.getItem(
+          'teatrumProps_' + this.state.path[this.state.idx]
+        )
 
-      Storage.putStore('state_path_' + this.props.name, {
-        push: this.push,
-        back: this.back,
-        forward: this.forward,
-        reset: this.reset,
+        objClass.props = Object.assign(
+          {},
+          objClass.props,
+          JSON.parse(historyProps)
+        )
+
+        Storage.setItemStorage(
+          'class_' +
+            Storage.getStore('path_' + this.state.path[this.state.idx]),
+          objClass
+        )
+      }
+
+      this.setState({
+        currentClass: objClass,
       })
     },
 
-    push(path) {
+    push(path, props) {
       let idx = this.state.idx
       this.state.path.push(path)
+      let currentClass = Storage.getStore(
+        'class_' + Storage.getStore('path_' + path)
+      )
+
+      currentClass.props = Object.assign({}, currentClass.props, props)
+
+      Storage.setItemStorage(
+        'class_' + Storage.getStore('path_' + path),
+        currentClass
+      )
+
+      if (this.props.browser) {
+        window.history.replaceState('', '', path)
+        window.localStorage.setItem(
+          'teatrumProps_' + path,
+          JSON.stringify(props)
+        )
+      }
+
       this.setState({
         idx: ++idx,
-        currentClass: Storage.getStore(
-          'class_' + Storage.getStore('path_' + path)
-        ),
+        currentClass: currentClass,
       })
     },
-    back() {
+
+    back(props) {
       let idx = --this.state.idx
       if (idx >= 0) {
+        let currentClass = Storage.getStore(
+          'class_' + Storage.getStore('path_' + this.state.path[idx])
+        )
+
+        currentClass.props = Object.assign({}, currentClass.props, props)
+
+        Storage.setItemStorage(
+          'class_' + Storage.getStore('path_' + this.state.path[idx]),
+          currentClass
+        )
+
+        if (this.props.browser) {
+          window.history.replaceState('', '', path)
+          window.localStorage.setItem(
+            'teatrumProps_' + path,
+            JSON.stringify(props)
+          )
+        }
+
         this.setState({
           idx: idx,
-          currentClass: Storage.getStore(
-            'class_' + Storage.getStore('path_' + this.state.path[idx])
-          ),
+          currentClass: currentClass,
         })
       }
     },
-    reset() {
+
+    reset(props) {
       let idx = 0
+      let currentClass = Storage.getStore(
+        'class_' + Storage.getStore('path_' + this.state.path[idx])
+      )
+
+      currentClass.props = Object.assign({}, currentClass.props, props)
+
+      Storage.setItemStorage(
+        'class_' + Storage.getStore('path_' + this.state.path[idx]),
+        currentClass
+      )
+
+      if (this.props.browser) {
+        window.history.replaceState('', '', path)
+        window.localStorage.setItem(
+          'teatrumProps_' + path,
+          JSON.stringify(props)
+        )
+      }
+
       this.setState({
         idx: idx,
-        currentClass: Storage.getStore(
-          'class_' + Storage.getStore('path_' + this.state.path[idx])
-        ),
+        currentClass: currentClass,
       })
     },
-    forward() {
+
+    currentPath() {
+      return this.state.path[this.state.idx]
+    },
+
+    forward(props) {
       let idx = ++this.state.idx
       if (idx <= this.state.path.length - 1) {
+        let currentClass = Storage.getStore(
+          'class_' + Storage.getStore('path_' + this.state.path[idx])
+        )
+
+        currentClass.props = Object.assign({}, currentClass.props, props)
+
+        Storage.setItemStorage(
+          'class_' + Storage.getStore('path_' + this.state.path[idx]),
+          currentClass
+        )
+
+        if (this.props.browser) {
+          window.history.replaceState('', '', path)
+          window.localStorage.setItem(
+            'teatrumProps_' + path,
+            JSON.stringify(props)
+          )
+        }
+
         this.setState({
           idx: idx,
-          currentClass: Storage.getStore(
-            'class_' + Storage.getStore('path_' + this.state.path[idx])
-          ),
+          currentClass: currentClass,
         })
       }
       Storage.getStore('class_' + Storage.getStore('path_' + this.props.init))
@@ -1052,10 +1149,6 @@ const bridge = {
     if (!preventUpdate) engine.propagateUpdates(key)
   },
 
-  history(key) {
-    return engine.getStore('state_path_' + key)
-  },
-
   setProps(key, props, preventUpdate = false) {
     engine.setProps(key, props)
     if (!preventUpdate) engine.propagateUpdates(key)
@@ -1091,19 +1184,24 @@ const bridge = {
     return engine.checkAttribute(key, atrName)
   },
 
-  stagePush(key, path) {
+  stagePush(key, path, props) {
     let actions = Storage.getStore('state_path_' + key)
-    actions.push(path)
+    actions.push(path, props)
   },
 
-  stageBack(key) {
+  stageBack(key, props) {
     let actions = Storage.getStore('state_path_' + key)
-    actions.back()
+    actions.back(props)
   },
 
-  stageForward(key) {
+  stageForward(key, props) {
     let actions = Storage.getStore('state_path_' + key)
-    actions.forward()
+    actions.forward(props)
+  },
+
+  stageReset(key, props) {
+    let actions = Storage.getStore('state_path_' + key)
+    actions.reset(props)
   },
 
   destroy(keys) {
