@@ -1,6 +1,6 @@
 {
-  "name": "react-deathstar",
-  "version": "2.0.6",
+  "name": "react-theatrum",
+  "version": "2.0.7",
   "description": "Create, Manipulate and Destroy React Elements easily",
   "main": "./lib/index",
   "scripts": {
@@ -26,5 +26,8 @@
     "release-it": "^7.6.1",
     "rimraf": "^2.6.2",
     "webpack": "^3.6.0"
+  },
+  "dependencies": {
+    "react": "^16.8.6"
   }
 }
