@@ -302,6 +302,8 @@ const theatrum = props => {
         }
       }
 
+      engine.setContext('theatrum_' + this.props.name, this)
+
       this.setState({
         currentClass: objClass,
       })
