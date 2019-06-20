@@ -1,6 +1,6 @@
 {
   "name": "react-theatrum",
-  "version": "0.0.0",
+  "version": "2.0.7",
   "description": "Create, Manipulate and Destroy React Elements easily",
   "main": "./lib/index",
   "scripts": {
