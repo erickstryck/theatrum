@@ -1,5 +1,4 @@
-import React from 'react'
-import createReactClass from 'create-react-class'
+import React, { Component } from 'react'
 
 /**
  * Responsável por importar o arquivo de configuração da minificação
@@ -83,7 +82,7 @@ class Storage {
     if (context) {
       value['update'] = () => {
         value.setState({
-          teatrumUpdater: value.teatrumUpdater ? true : false,
+          theatrumUpdater: value.theatrumUpdater ? true : false,
         })
       }
       let temp = {}
@@ -139,32 +138,30 @@ class Storage {
 }
 
 const factory = key => {
-  return createReactClass({
-    getInitialState() {
-      return {
+  return class Factory extends Component {
+    constructor(props) {
+      super(props)
+
+      this.state = {
         staff: engine,
         key: key,
       }
-    },
+    }
 
     render() {
-      let element = engine.processElement(
-        React.createElement('div', this.props),
-        key,
-        false,
-        this
-      )
+      let element = engine.getElement(this.state.key, true)
 
-      if (this.props.path) {
-        let currentPath = this.state.staff
-          .getStore('state_path_' + this.props.owner)
-          .currentPath()
-        if (this.props.path != currentPath) element = ''
+      if (!element) {
+        element = engine.processElement(
+          React.createElement('div', this.props),
+          this.state.key,
+          false,
+          this
+        )
       }
-
       return element
-    },
-  })
+    }
+  }
 }
 
 const stage = props => {
@@ -181,7 +178,7 @@ const stage = props => {
   return Storage.getStore('class_' + props.name)
 }
 
-const teatrum = props => {
+const theatrum = props => {
   if (!props.name || !props.init) {
     console.error(
       "You need to enter the props 'name' and 'init' for the component."
@@ -198,8 +195,18 @@ const teatrum = props => {
     }
   }
 
-  return new (createReactClass({
-    getInitialState() {
+  class Theatrum extends Component {
+    constructor(props) {
+      super(props)
+
+      this.getAllPaths = this.getAllPaths.bind(this)
+      this.handleBrowserHistory = this.handleBrowserHistory.bind(this)
+      this.push = this.push.bind(this)
+      this.back = this.back.bind(this)
+      this.reset = this.reset.bind(this)
+      this.currentPath = this.currentPath.bind(this)
+      this.injectOwner = this.injectOwner.bind(this)
+
       Storage.putStore('state_path_' + this.props.name, {
         push: this.push,
         back: this.back,
@@ -208,55 +215,105 @@ const teatrum = props => {
         currentPath: this.currentPath,
       })
 
-      return {
+      let paths = this.getAllPaths(this.props.children)
+      this.state = {
         storage: Storage,
         currentClass: '',
-        path: [this.props.init],
-        idx: 0,
+        path: paths,
+        idx: [paths.indexOf(this.props.init)],
       }
-    },
+    }
+
+    getAllPaths(children) {
+      let paths = []
+      if (children instanceof Array) {
+        for (let x = 0; x < children.length; x++) {
+          if (children[x].props.path) paths.push(children[x].props.path)
+        }
+      } else {
+        if (children.props.path) paths.push(children.props.path)
+      }
+
+      return paths
+    }
+
+    handleBrowserHistory() {
+      if (this.props.browser) {
+        let historyPaths = JSON.parse(
+          window.localStorage.getItem('theatrumPaths')
+        )
+
+        if (historyPaths) {
+          if (
+            !historyPaths.history &&
+            this.state.path.indexOf(window.location.pathname) > 0
+          ) {
+            if (
+              historyPaths.idx.slice(-1)[0] !=
+              this.state.path.indexOf(window.location.pathname)
+            ) {
+              historyPaths.idx.push(
+                this.state.path.indexOf(window.location.pathname)
+              )
+            }
+          } else if (this.state.path.indexOf(window.location.pathname) < 0) {
+            historyPaths.idx.push(this.state.path.indexOf(this.props.redirect))
+          }
+
+          this.state.path = historyPaths.path
+          this.state.idx = historyPaths.idx
+
+          historyPaths.history = false
+          window.localStorage.setItem(
+            'theatrumPaths',
+            JSON.stringify(historyPaths)
+          )
+        }
+      }
+    }
 
     componentDidMount() {
       let objClass = Storage.getStore(
-        'class_' + Storage.getStore('path_' + this.state.path[this.state.idx])
+        'class_' +
+          Storage.getStore(
+            'path_' + this.state.path[this.state.idx.slice(-1)[0]]
+          )
       )
-
-      if (!objClass) {
-        objClass = Storage.getStore(
-          'class_' + Storage.getStore('path_' + this.props.redirect)
-        )
-        this.state.path.splice(this.state.idx, 1)
-        this.state.path.push(this.props.redirect)
-        if (this.props.browser)
-          window.history.pushState(null, '', this.props.redirect)
-      }
 
       if (this.props.browser && !this.props.ignorePersistence) {
         let historyProps = window.localStorage.getItem(
-          'teatrumProps_' + this.state.path[this.state.idx]
+          'theatrumProps_' + this.state.path[this.state.idx.slice(-1)[0]]
         )
 
-        objClass.props = Object.assign(
-          {},
-          objClass.props,
-          JSON.parse(historyProps)
-        )
+        if (historyProps) {
+          objClass.props = Object.assign(
+            {},
+            objClass.props,
+            JSON.parse(historyProps)
+          )
 
-        Storage.setItemStorage(
-          'class_' +
-            Storage.getStore('path_' + this.state.path[this.state.idx]),
-          objClass
-        )
+          Storage.setItemStorage(
+            'class_' +
+              Storage.getStore(
+                'path_' + this.state.path[this.state.idx.slice(-1)[0]]
+              ),
+            objClass
+          )
+        }
       }
 
       this.setState({
         currentClass: objClass,
       })
-    },
+    }
 
     push(path, props) {
-      let idx = this.state.idx
-      this.state.path.push(path)
+      let idx = this.state.path.indexOf(path)
+      if (this.state.idx.slice(-1)[0] != idx) this.state.idx.push(idx)
+
+      if (idx < 0) idx = this.state.path.indexOf(this.props.redirect)
+      path = this.state.path[idx]
+
       let currentClass = Storage.getStore(
         'class_' + Storage.getStore('path_' + path)
       )
@@ -270,20 +327,30 @@ const teatrum = props => {
 
       if (this.props.browser) {
         window.history.replaceState('', '', path)
+        if (props)
+          window.localStorage.setItem(
+            'theatrumProps_' + path,
+            JSON.stringify(props)
+          )
+
         window.localStorage.setItem(
-          'teatrumProps_' + path,
-          JSON.stringify(props)
+          'theatrumPaths',
+          JSON.stringify({
+            idx: this.state.idx,
+            path: this.state.path,
+            history: true,
+          })
         )
       }
 
       this.setState({
-        idx: ++idx,
         currentClass: currentClass,
       })
-    },
+    }
 
     back(props) {
-      let idx = --this.state.idx
+      this.state.idx.pop()
+      let idx = this.state.idx.slice(-1)[0]
       if (idx >= 0) {
         let currentClass = Storage.getStore(
           'class_' + Storage.getStore('path_' + this.state.path[idx])
@@ -297,22 +364,32 @@ const teatrum = props => {
         )
 
         if (this.props.browser) {
-          window.history.replaceState('', '', path)
+          window.history.replaceState('', '', this.state.path[idx])
+          if (props)
+            window.localStorage.setItem(
+              'theatrumProps_' + this.state.path[idx],
+              JSON.stringify(props)
+            )
+
           window.localStorage.setItem(
-            'teatrumProps_' + path,
-            JSON.stringify(props)
+            'theatrumPaths',
+            JSON.stringify({
+              idx: this.state.idx,
+              path: this.state.path,
+              history: true,
+            })
           )
         }
 
         this.setState({
-          idx: idx,
           currentClass: currentClass,
         })
       }
-    },
+    }
 
     reset(props) {
-      let idx = 0
+      this.state.idx = [this.props.init]
+      let idx = this.state.idx.slice(-1)[0]
       let currentClass = Storage.getStore(
         'class_' + Storage.getStore('path_' + this.state.path[idx])
       )
@@ -325,60 +402,64 @@ const teatrum = props => {
       )
 
       if (this.props.browser) {
-        window.history.replaceState('', '', path)
+        window.history.replaceState('', '', this.state.path[idx])
+        if (props)
+          window.localStorage.setItem(
+            'theatrumProps_' + this.state.path[idx],
+            JSON.stringify(props)
+          )
+
         window.localStorage.setItem(
-          'teatrumProps_' + path,
-          JSON.stringify(props)
+          'theatrumPaths',
+          JSON.stringify({
+            idx: this.state.idx,
+            path: this.state.path,
+            history: true,
+          })
         )
       }
 
       this.setState({
-        idx: idx,
         currentClass: currentClass,
       })
-    },
+    }
 
     currentPath() {
-      return this.state.path[this.state.idx]
-    },
+      return this.state.path[this.state.idx.slice(-1)[0]]
+    }
 
-    forward(props) {
-      let idx = ++this.state.idx
-      if (idx <= this.state.path.length - 1) {
-        let currentClass = Storage.getStore(
-          'class_' + Storage.getStore('path_' + this.state.path[idx])
-        )
-
-        currentClass.props = Object.assign({}, currentClass.props, props)
-
-        Storage.setItemStorage(
-          'class_' + Storage.getStore('path_' + this.state.path[idx]),
-          currentClass
-        )
-
-        if (this.props.browser) {
-          window.history.replaceState('', '', path)
-          window.localStorage.setItem(
-            'teatrumProps_' + path,
-            JSON.stringify(props)
+    injectOwner(props) {
+      let children = props.children
+      if (children instanceof Array) {
+        let childrens = []
+        for (let x = 0; x < children.length; x++) {
+          childrens.push(
+            engine.swapPropsAttr(children[x], {
+              owner: this.props.name,
+            })
           )
         }
-
-        this.setState({
-          idx: idx,
-          currentClass: currentClass,
-        })
+        children = childrens
+      } else {
+        children = engine.swapPropsAttr(children, { owner: this.props.name })
       }
-      Storage.getStore('class_' + Storage.getStore('path_' + this.props.init))
-    },
+
+      return engine.swapPropsAttr({ props: props }, { children: children })
+        .props
+    }
+
     render() {
+      this.handleBrowserHistory()
+
       return this.state.currentClass
         ? this.state.currentClass.update
           ? this.state.currentClass.render()
           : this.state.currentClass
-        : this.props.children
-    },
-  }))(props)
+        : this.injectOwner(this.props).children
+    }
+  }
+
+  return new Theatrum(props)
 }
 
 const scene = props => {
@@ -713,9 +794,9 @@ const engine = {
    * @param {string} key
    * @return {object}
    */
-  getElement(key) {
+  getElement(key, supress = false) {
     key = engine.minf(key)
-    if (engine.checkKey(key)) {
+    if (engine.checkKey(key, supress)) {
       let temp = engine.getStore(key)
       let keyMaster = temp.props ? temp.key : temp
       let keyArr = key.split('-')
@@ -1083,10 +1164,10 @@ const engine = {
    * @param {string} key
    * @return {boolean}
    */
-  checkKey(key) {
+  checkKey(key, supress = false) {
     let hasKey = engine.keys().indexOf(key) === -1 ? false : true
 
-    if (!hasKey) {
+    if (!hasKey && !supress) {
       console.error(
         `this key "${key}" was not found, see the available keys: ${engine.keys()}`
       )
@@ -1213,4 +1294,4 @@ export const Staff = bridge
 export const Stage = stage
 export const Scene = scene
 export const Actor = actor
-export const Teatrum = teatrum
+export const Theatrum = theatrum

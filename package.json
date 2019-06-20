@@ -1,5 +1,5 @@
 {
-  "name": "react-teatrum",
+  "name": "react-theatrum",
   "version": "0.0.0",
   "description": "Create, Manipulate and Destroy React Elements easily",
   "main": "./lib/index",
@@ -28,7 +28,6 @@
     "webpack": "^3.6.0"
   },
   "dependencies": {
-    "create-react-class": "^15.6.3",
     "react": "^16.8.6"
   }
 }
