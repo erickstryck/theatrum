@@ -320,7 +320,7 @@ const theatrum = props => {
         'class_' + Storage.getStore('path_' + path)
       )
 
-      currentClass.props = Object.assign({}, currentClass.props, props)
+      currentClass = engine.swapPropsAttr(currentClass, props)
 
       Storage.setItemStorage(
         'class_' + Storage.getStore('path_' + path),
@@ -358,7 +358,7 @@ const theatrum = props => {
           'class_' + Storage.getStore('path_' + this.state.path[idx])
         )
 
-        currentClass.props = Object.assign({}, currentClass.props, props)
+        currentClass = engine.swapPropsAttr(currentClass, props)
 
         Storage.setItemStorage(
           'class_' + Storage.getStore('path_' + this.state.path[idx]),
@@ -396,7 +396,7 @@ const theatrum = props => {
         'class_' + Storage.getStore('path_' + this.state.path[idx])
       )
 
-      currentClass.props = Object.assign({}, currentClass.props, props)
+      currentClass = engine.swapPropsAttr(currentClass, props)
 
       Storage.setItemStorage(
         'class_' + Storage.getStore('path_' + this.state.path[idx]),
@@ -711,15 +711,14 @@ const engine = {
         for (let index = 0; index < data.length; index++) {
           let current = data[index]
           if (current) {
-            ++index
             if (current.props)
               engine.mapChildrens(
                 current.props.children,
-                key + '-' + engine.haveTypeName(current.type) + index
+                key + '-' + engine.haveTypeName(current.type) + '/' + index
               )
             if (current.props)
               engine.putStore(
-                key + '-' + engine.haveTypeName(current.type) + index,
+                key + '-' + engine.haveTypeName(current.type) + '/' + index,
                 current.key
               )
           }
@@ -893,14 +892,16 @@ const engine = {
       return
     }
     if (engine.checkKey(key)) {
+      let tempJsx = ''
+      let updated = ''
       if (attributes.ref) {
-        let tempJsx = engine.getElement(key)
-        let updated = Object.assign({}, tempJsx, attributes)
+        tempJsx = engine.getElement(key)
+        updated = Object.assign({}, tempJsx, attributes)
         engine.updateAllReferences(updated)
       } else {
         if (engine.checkProps(key)) {
-          let tempJsx = engine.getElement(key)
-          let updated = engine.swapPropsAttr(tempJsx, attributes)
+          tempJsx = engine.getElement(key)
+          updated = engine.swapPropsAttr(tempJsx, attributes)
           engine.updateAllReferences(updated)
         }
       }
@@ -1141,11 +1142,77 @@ const engine = {
       let current = keys[x]
       let tempElement = engine.getStore(current)
       if (tempElement.props) {
-        if (tempElement.key == obj.key) {
+        if (tempElement.key !== obj.key) {
+          let childrenUpdated = engine.checkChildrensInArray(obj, tempElement)
+          engine.processElement(
+            engine.swapPropsAttr(tempElement, {
+              children: childrenUpdated,
+            }),
+            current
+          )
+        } else {
           engine.processElement(obj, current)
         }
       }
     }
+  },
+
+  /**
+   * Verifica e aplica as mudanças nos filhos de um elemento pai.
+   *
+   * @param {object} mainElement
+   * @param {object} currentElement
+   * @return {object}
+   */
+  checkChildrensInArray(mainElement, currentElement) {
+    if (currentElement && currentElement.props) {
+      let childrens = currentElement.props.children
+      let childrenUpdated = []
+      if (childrens && childrens instanceof Array) {
+        for (let x = 0; x < childrens.length; x++) {
+          let current = childrens[x]
+          let nextChildrens = engine.checkChildrensInArray(mainElement, current)
+          childrenUpdated = engine.compareChildrens(
+            mainElement,
+            current,
+            childrenUpdated,
+            nextChildrens
+          )
+        }
+        return childrenUpdated
+      } else if (childrens && childrens.props) {
+        let nextChildrens = engine.checkChildrensInArray(mainElement, childrens)
+        childrenUpdated = engine.compareChildrens(
+          mainElement,
+          childrens,
+          childrenUpdated,
+          nextChildrens
+        )
+        return childrenUpdated
+      } else return childrens
+    } else return currentElement
+  },
+
+  /**
+   * Verifica se houve alteração no filho encontrado e recupera o filho atualizado.
+   *
+   * @param {object} mainElement
+   * @param {object} current
+   * @param {object} childrenUpdated
+   * @param {object} nextChildrens
+   * @return {object}
+   */
+  compareChildrens(mainElement, current, childrenUpdated, nextChildrens) {
+    if (current && current.key && current.key === mainElement.key) {
+      childrenUpdated.push(mainElement)
+    } else {
+      if (current && current.props)
+        childrenUpdated.push(
+          engine.swapPropsAttr(current, { children: nextChildrens })
+        )
+      else childrenUpdated.push(current)
+    }
+    return childrenUpdated
   },
 
   /**

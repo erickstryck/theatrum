@@ -16,10 +16,12 @@ const Teste1 = () => (
       <p
         onClick={() => {
           Staff.setAttribute(
-            'actor_title2',
+            'actor_title2-p/1',
             { style: { color: 'yellow' } },
             true
           )
+
+          let teste = Staff.getElement('actor_title2-p/1')
           Staff.stageBack('teatrum')
         }}
       >
