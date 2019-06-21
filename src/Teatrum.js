@@ -1224,7 +1224,9 @@ const engine = {
    */
   swapPropsAttr(obj, newAttr) {
     let tempProps = Object.assign({}, obj.props, newAttr)
-    return Object.assign({}, obj, { props: tempProps })
+    let assigned = Object.assign({}, obj, { props: tempProps })
+    assigned['__proto__'] = obj['__proto__']
+    return assigned
   },
 
   /**
