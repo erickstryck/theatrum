@@ -174,7 +174,10 @@ const stage = props => {
   let objectClass = new (factory('stage_' + props.name))().render()
   if (props.component) {
     objectClass = engine.swapPropsAttr(objectClass, {
-      children: new props.component(),
+      children:
+        props.component instanceof Function
+          ? new props.component()
+          : props.component,
       component: null,
     })
   }
@@ -316,9 +319,10 @@ const theatrum = props => {
 
     push(path, props) {
       let idx = this.state.path.indexOf(path)
+      if (idx < 0) idx = this.state.path.indexOf(this.props.redirect)
+
       if (this.state.idx.slice(-1)[0] != idx) this.state.idx.push(idx)
 
-      if (idx < 0) idx = this.state.path.indexOf(this.props.redirect)
       path = this.state.path[idx]
 
       let currentClass = Storage.getStore(
@@ -457,6 +461,7 @@ const theatrum = props => {
 
     render() {
       this.handleBrowserHistory()
+      console.log(engine.keys())
       return this.state.currentClass
         ? this.state.currentClass
         : this.injectOwner(this.props).children
@@ -729,11 +734,11 @@ const engine = {
         if (data.props)
           engine.mapChildrens(
             data.props.children,
-            key + '-' + engine.haveTypeName(data.type) + '1'
+            key + '-' + engine.haveTypeName(data.type) + '/1'
           )
         if (data.props)
           engine.putStore(
-            key + '-' + engine.haveTypeName(data.type) + '1',
+            key + '-' + engine.haveTypeName(data.type) + '/1',
             data.key
           )
       }
@@ -750,7 +755,13 @@ const engine = {
     if (minify && typeof type === 'string') {
       if (Storage.getHtmlDict().indexOf(type) === -1) Storage.setHtmlDict(type)
     }
-    return type.displayName ? type.displayName : type.name ? type.name : type
+    return type.displayName
+      ? type.displayName
+      : type instanceof Function
+      ? type.name
+        ? type.name
+        : 'div'
+      : type
   },
 
   /**
