@@ -141,7 +141,6 @@ const factory = key => {
   return class Factory extends Component {
     constructor(props) {
       super(props)
-
       this.state = {
         staff: engine,
         key: key,
@@ -172,10 +171,16 @@ const stage = props => {
     return null
   }
 
-  let objectClass = new (factory('stage_' + props.name))(props)
-  Storage.putStore('class_' + props.name, objectClass)
+  let objectClass = new (factory('stage_' + props.name))().render()
+  if (props.component) {
+    objectClass = engine.swapPropsAttr(objectClass, {
+      children: new props.component(),
+      component: null,
+    })
+  }
+  Storage.putStore('stage_' + props.name, objectClass)
   Storage.putStore('path_' + props.path, props.name)
-  return Storage.getStore('class_' + props.name)
+  return Storage.getStore('stage_' + props.name)
 }
 
 const theatrum = props => {
@@ -274,7 +279,7 @@ const theatrum = props => {
 
     componentDidMount() {
       let objClass = Storage.getStore(
-        'class_' +
+        'stage_' +
           Storage.getStore(
             'path_' + this.state.path[this.state.idx.slice(-1)[0]]
           )
@@ -293,7 +298,7 @@ const theatrum = props => {
           )
 
           Storage.setItemStorage(
-            'class_' +
+            'stage_' +
               Storage.getStore(
                 'path_' + this.state.path[this.state.idx.slice(-1)[0]]
               ),
@@ -317,13 +322,13 @@ const theatrum = props => {
       path = this.state.path[idx]
 
       let currentClass = Storage.getStore(
-        'class_' + Storage.getStore('path_' + path)
+        'stage_' + Storage.getStore('path_' + path)
       )
 
       currentClass = engine.swapPropsAttr(currentClass, props)
 
       Storage.setItemStorage(
-        'class_' + Storage.getStore('path_' + path),
+        'stage_' + Storage.getStore('path_' + path),
         currentClass
       )
 
@@ -355,13 +360,13 @@ const theatrum = props => {
       let idx = this.state.idx.slice(-1)[0]
       if (idx >= 0) {
         let currentClass = Storage.getStore(
-          'class_' + Storage.getStore('path_' + this.state.path[idx])
+          'stage_' + Storage.getStore('path_' + this.state.path[idx])
         )
 
         currentClass = engine.swapPropsAttr(currentClass, props)
 
         Storage.setItemStorage(
-          'class_' + Storage.getStore('path_' + this.state.path[idx]),
+          'stage_' + Storage.getStore('path_' + this.state.path[idx]),
           currentClass
         )
 
@@ -393,13 +398,13 @@ const theatrum = props => {
       this.state.idx = [this.props.init]
       let idx = this.state.idx.slice(-1)[0]
       let currentClass = Storage.getStore(
-        'class_' + Storage.getStore('path_' + this.state.path[idx])
+        'stage_' + Storage.getStore('path_' + this.state.path[idx])
       )
 
       currentClass = engine.swapPropsAttr(currentClass, props)
 
       Storage.setItemStorage(
-        'class_' + Storage.getStore('path_' + this.state.path[idx]),
+        'stage_' + Storage.getStore('path_' + this.state.path[idx]),
         currentClass
       )
 
@@ -452,11 +457,8 @@ const theatrum = props => {
 
     render() {
       this.handleBrowserHistory()
-
       return this.state.currentClass
-        ? this.state.currentClass.update
-          ? this.state.currentClass.render()
-          : this.state.currentClass
+        ? this.state.currentClass
         : this.injectOwner(this.props).children
     }
   }
@@ -470,7 +472,7 @@ const scene = props => {
     return null
   }
 
-  return new (factory('scene_' + props.name))(props)
+  return new (factory('scene_' + props.name))(props).render()
 }
 
 const actor = props => {
@@ -479,7 +481,7 @@ const actor = props => {
     return null
   }
 
-  return new (factory('actor_' + props.name))(props)
+  return new (factory('actor_' + props.name))(props).render()
 }
 
 const engine = {
